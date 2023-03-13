@@ -8,9 +8,15 @@ import java.util.stream.Stream;
 
 public interface ItemRepository {
     Item save(int ownerId, ItemDto item);
+
     Stream<Item> getAll(int ownerId);
+
     Optional<Item> getById(int id);
+
     Item update(Item item);
+
     void delete(int id);
+
     Stream<Item> searchItem(String text);
+
 }
