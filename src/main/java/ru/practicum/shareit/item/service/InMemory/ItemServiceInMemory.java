@@ -21,6 +21,7 @@ public class ItemServiceInMemory implements ItemService {
     private ItemRepository itemRepository;
     @Autowired
     UserService userService;
+
     @Override
     public Item createItem(int ownerId, ItemDto item) {
         if (item.getAvailable() == null) {

@@ -67,7 +67,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
         return itemList
                 .stream()
                 .filter(item -> item.getName().toLowerCase().contains(formattedText)
-                    || item.getDescription().toLowerCase().contains(formattedText)
-                    && item.isAvailable());
+                        || item.getDescription().toLowerCase().contains(formattedText)
+                        && item.isAvailable());
     }
 }

@@ -52,19 +52,19 @@ public class UserController {
         userService.removeUser(userId);
     }
 
-    @ExceptionHandler({ NotFoundException.class })
+    @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> notFoundExceptionHandler() {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({ BadRequestException.class })
+    @ExceptionHandler({BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> badRequestExceptionHandler() {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ ConflictRequestException.class })
+    @ExceptionHandler({ConflictRequestException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> conflictRequestExceptionHandler() {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
