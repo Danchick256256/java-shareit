@@ -6,12 +6,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.item.util.ItemMapper;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.util.EmailValidator;
 import ru.practicum.shareit.util.BadRequestException;
-import ru.practicum.shareit.util.ConflictRequestException;
 import ru.practicum.shareit.util.NotFoundException;
 
 import java.util.Collections;

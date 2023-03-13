@@ -8,13 +8,11 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.util.EmailValidator;
-import ru.practicum.shareit.user.util.UserMapper;
 import ru.practicum.shareit.util.BadRequestException;
 import ru.practicum.shareit.util.ConflictRequestException;
 import ru.practicum.shareit.util.NotFoundException;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * TODO Sprint add-controllers.
