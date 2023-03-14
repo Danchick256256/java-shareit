@@ -24,10 +24,10 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
     
-    private final String UserHeader = "X-Sharer-User-Id";
+    private final String userHeader = "X-Sharer-User-Id";
 
     @GetMapping
-    public List<Item> getAllItems(@RequestHeader(UserHeader) int ownerId) {
+    public List<Item> getAllItems(@RequestHeader(userHeader) int ownerId) {
         log.info("get.all.items.request");
         return itemService.getAllItemsByOwnerId(ownerId).collect(Collectors.toList());
     }
@@ -39,25 +39,25 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader(UserHeader) int ownerId, @RequestBody ItemDto itemDto) {
+    public Item createItem(@RequestHeader(userHeader) int ownerId, @RequestBody ItemDto itemDto) {
         log.info("create.item.request");
         return itemService.createItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestHeader(UserHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
+    public Item updateItem(@RequestHeader(userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
         log.info("update.item.request");
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @DeleteMapping
-    public void removeItem(@RequestHeader(UserHeader) int ownerId, @RequestBody int itemId) {
+    public void removeItem(@RequestHeader(userHeader) int ownerId, @RequestBody int itemId) {
         log.info("remove.item.request");
         itemService.removeItem(ownerId, itemId);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestHeader(UserHeader) int ownerId, @RequestParam String text) {
+    public List<Item> searchItem(@RequestHeader(userHeader) int ownerId, @RequestParam String text) {
         log.info("search.item.request");
         return itemService.searchItems(text).collect(Collectors.toList());
     }
