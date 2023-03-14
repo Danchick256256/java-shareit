@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class ItemController {
     @Autowired
     private ItemService itemService;
-    
     private final String userHeader = "X-Sharer-User-Id";
 
     @GetMapping
