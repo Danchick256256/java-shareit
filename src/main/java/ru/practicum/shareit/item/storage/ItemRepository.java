@@ -11,7 +11,7 @@ public interface ItemRepository {
 
     Stream<Item> getAll(int ownerId);
 
-    Optional<Item> getById(int id);
+    Item getById(int id);
 
     Item update(Item item);
 

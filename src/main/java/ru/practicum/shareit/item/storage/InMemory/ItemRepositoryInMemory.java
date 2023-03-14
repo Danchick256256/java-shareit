@@ -35,7 +35,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
             itemList.add(mappedItem);
             return itemList.stream().filter(it -> it.getId() == mappedItem.getId()).findFirst().get();
         } else {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("User not found by ownerId: " + ownerId);
         }
     }
 
@@ -45,8 +45,13 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> getById(int id) {
-        return itemList.stream().filter(it -> it.getId() == id).findFirst();
+    public Item getById(int id) {
+        Optional<Item> item = itemList.stream().filter(it -> it.getId() == id).findFirst();
+        if (item.isPresent()) {
+            return item.get();
+        } else {
+            throw new NotFoundException("Item not found by id: " + id);
+        }
     }
 
     @Override

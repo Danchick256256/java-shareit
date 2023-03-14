@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 @Component
 public class UserRepositoryInMemory implements UserRepository {
-    ArrayList<User> userList;
+    private final ArrayList<User> userList;
 
     public UserRepositoryInMemory() {
         userList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class UserRepositoryInMemory implements UserRepository {
             userList.add(user);
             return userList.stream().filter(us -> us.getId() == user.getId()).findFirst().get();
         } else {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("User not found by id: " + user.getId());
         }
 
     }
@@ -53,7 +53,7 @@ public class UserRepositoryInMemory implements UserRepository {
         if (deletedUser.isPresent()) {
             userList.remove(deletedUser.get());
         } else {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("User not found by id: " + id);
         }
     }
 

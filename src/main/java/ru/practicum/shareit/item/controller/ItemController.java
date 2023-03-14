@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,37 +19,46 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/items")
+@Slf4j
 public class ItemController {
     @Autowired
     private ItemService itemService;
+    
+    private final String UserHeader = "X-Sharer-User-Id";
 
     @GetMapping
-    public List<Item> getAllItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public List<Item> getAllItems(@RequestHeader(UserHeader) int ownerId) {
+        log.info("get.all.items.request");
         return itemService.getAllItemsByOwnerId(ownerId).collect(Collectors.toList());
     }
 
     @GetMapping("/{itemId}")
     public Item getItemById(@PathVariable int itemId) {
+        log.info("get.item.by.id.request");
         return itemService.getItemById(itemId);
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestBody ItemDto itemDto) {
+    public Item createItem(@RequestHeader(UserHeader) int ownerId, @RequestBody ItemDto itemDto) {
+        log.info("create.item.request");
         return itemService.createItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
+    public Item updateItem(@RequestHeader(UserHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
+        log.info("update.item.request");
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @DeleteMapping
-    public void removeItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestBody int itemId) {
+    public void removeItem(@RequestHeader(UserHeader) int ownerId, @RequestBody int itemId) {
+        log.info("remove.item.request");
         itemService.removeItem(ownerId, itemId);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestParam String text) {
+    public List<Item> searchItem(@RequestHeader(UserHeader) int ownerId, @RequestParam String text) {
+        log.info("search.item.request");
         return itemService.searchItems(text).collect(Collectors.toList());
     }
 

@@ -15,12 +15,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
-
 public class ItemServiceInMemory implements ItemService {
     @Autowired
     private ItemRepository itemRepository;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public Item createItem(int ownerId, ItemDto item) {
@@ -43,44 +42,32 @@ public class ItemServiceInMemory implements ItemService {
 
     @Override
     public Item getItemById(int itemId) {
-        if (itemRepository.getById(itemId).isPresent()) {
-            return itemRepository.getById(itemId).get();
-        } else {
-            throw new NotFoundException("Item not found");
-        }
+        return itemRepository.getById(itemId);
     }
 
     @Override
     public Item updateItem(int ownerId, int itemId, ItemDto itemDto) {
-        if (itemRepository.getById(itemId).isPresent()) {
-            Item updatedItem = itemRepository.getById(itemId).get();
-            if (updatedItem.getOwnerId() != ownerId) {
-                throw new NotFoundException("item not found");
-            }
-            if (itemDto.getDescription() != null) {
-                updatedItem.setDescription(itemDto.getDescription());
-            }
-            if (itemDto.getName() != null) {
-                updatedItem.setName(itemDto.getName());
-            }
-            if (itemDto.getAvailable() != null) {
-                updatedItem.setAvailable(itemDto.getAvailable());
-            }
-            return itemRepository.update(updatedItem);
-        } else {
-            throw new NotFoundException("Item not found");
+        Item updatedItem = getItemById(itemId);
+        if (updatedItem.getOwnerId() != ownerId) {
+            throw new NotFoundException("item not found by ownerId: " + ownerId);
         }
+        if (itemDto.getDescription() != null) {
+            updatedItem.setDescription(itemDto.getDescription());
+        }
+        if (itemDto.getName() != null) {
+            updatedItem.setName(itemDto.getName());
+        }
+        if (itemDto.getAvailable() != null) {
+            updatedItem.setAvailable(itemDto.getAvailable());
+        }
+        return itemRepository.update(updatedItem);
     }
 
     @Override
     public void removeItem(int ownerId, int itemId) {
-        Optional<Item> item = itemRepository.getById(itemId);
-        if (item.isPresent()) {
-            if (item.get().getOwnerId() == ownerId) {
-                itemRepository.delete(itemId);
-            }
-        } else {
-            throw new NotFoundException("item not found");
+        Item item = getItemById(itemId);
+        if (item.getOwnerId() == ownerId) {
+            itemRepository.delete(itemId);
         }
     }
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class UserServiceInMemory implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository; // Autowired c final не работает
 
     @Override
     public List<User> getAllUsers() {
@@ -40,7 +40,7 @@ public class UserServiceInMemory implements UserService {
     @Override
     public User createUser(UserDto userDto) {
         if (userRepository.emailExisting(userDto.getEmail())) {
-            throw new ConflictRequestException("email is exists");
+            throw new ConflictRequestException("email is exists: " + userDto.getEmail());
         }
         User user = UserMapper.dtoToUser(userDto);
         return userRepository.save(user);
@@ -52,7 +52,7 @@ public class UserServiceInMemory implements UserService {
             User updatedUser = userRepository.getById(id).get();
             if (!updatedUser.getEmail().equals(userDto.getEmail())) {
                 if (userRepository.emailExisting(userDto.getEmail())) {
-                    throw new ConflictRequestException("email is exists");
+                    throw new ConflictRequestException("email is exists: " + userDto.getEmail());
                 }
             }
             if (userDto.getEmail() != null && !EmailValidator.isValid(userDto.getEmail())) {
@@ -66,7 +66,7 @@ public class UserServiceInMemory implements UserService {
             }
             return userRepository.update(updatedUser);
         } else {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("User not found: " + userDto.getName());
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,22 +20,26 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/users")
+@Slf4j
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GetMapping
     public List<User> getAllUsers() {
+        log.info("get.all.users.request");
         return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable int userId) {
+        log.info("get.user.by.id.request");
         return userService.getUserById(userId);
     }
 
     @PostMapping
     public User createUser(@RequestBody UserDto userDto) {
+        log.info("create.user.request");
         if (EmailValidator.isValid(userDto.getEmail())) {
             return userService.createUser(userDto);
         } else {
@@ -44,11 +49,13 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public User updateUser(@PathVariable int userId, @RequestBody UserDto userDto) {
+        log.info("update.user.request");
         return userService.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable int userId) {
+        log.info("delete.user.request");
         userService.removeUser(userId);
     }
 
