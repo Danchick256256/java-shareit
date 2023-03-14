@@ -11,7 +11,6 @@ import ru.practicum.shareit.util.BadRequestException;
 import ru.practicum.shareit.util.NotFoundException;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
