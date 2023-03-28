@@ -25,44 +25,44 @@ public class ItemController {
 
     @GetMapping
     public List<Item> getAllItems(@RequestHeader(userHeader) int ownerId) {
-        log.info("get.all.items.request");
+        log.info("get all items by owner id = {}", ownerId);
         return itemService.getAllItemsByOwnerId(ownerId).collect(Collectors.toList());
     }
 
     @GetMapping("/{itemId}")
-    public Item getItemById(@PathVariable int itemId) {
-        log.info("get.item.by.id.request");
+    public ItemDto getItemById(@PathVariable int itemId) {
+        log.info("get item by id = {}", itemId);
         return itemService.getItemById(itemId);
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader(userHeader) int ownerId, @RequestBody ItemDto itemDto) {
-        log.info("create.item.request");
+    public ItemDto createItem(@RequestHeader(userHeader) int ownerId, @RequestBody ItemDto itemDto) {
+        log.info("create item by owner id = {}, data = {}", ownerId, itemDto.toString());
         return itemService.createItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
     public Item updateItem(@RequestHeader(userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
-        log.info("update.item.request");
+        log.info("update item by owner id = {}, item id = {}, data = {}", ownerId, itemId, itemDto);
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @DeleteMapping
     public void removeItem(@RequestHeader(userHeader) int ownerId, @RequestBody int itemId) {
-        log.info("remove.item.request");
+        log.info("delete item by owner id = {}, item id = {}", ownerId, itemId);
         itemService.removeItem(ownerId, itemId);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestHeader(userHeader) int ownerId, @RequestParam String text) {
-        log.info("search.item.request");
+    public List<Item> searchItem(@RequestParam String text) {
+        log.info("search item by text = {}", text);
         return itemService.searchItems(text).collect(Collectors.toList());
     }
 
     @PostMapping("{itemId}/comment")
-    public Comment addComment(@Valid @RequestBody CommentDto dto, @RequestHeader(userHeader) long author,
+    public CommentDto addComment(@Valid @RequestBody CommentDto dto, @RequestHeader(userHeader) long author,
                               @PathVariable long itemId) {
+        log.info("create comment by author id = {}, item id = {}, data = {}", author, itemId, dto.toString());
         return itemService.createComment(dto, author, itemId);
     }
-
 }

@@ -9,11 +9,11 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.stream.Stream;
 
 public interface ItemService {
-    Item createItem(long ownerId, ItemDto item);
+    ItemDto createItem(long ownerId, ItemDto item);
 
     Stream<Item> getAllItemsByOwnerId(long ownerId);
 
-    Item getItemById(long itemId);
+    ItemDto getItemById(long itemId);
 
     Item updateItem(long ownerId, long itemId, ItemDto itemDto);
 
@@ -21,5 +21,5 @@ public interface ItemService {
 
     Stream<Item> searchItems(String text);
 
-    Comment createComment(CommentDto dto, long author, long itemId);
+    CommentDto createComment(CommentDto dto, long author, long itemId);
 }

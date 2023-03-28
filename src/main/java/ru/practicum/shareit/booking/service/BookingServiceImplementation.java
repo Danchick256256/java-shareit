@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.exception.BookingBadRequestException;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
 import ru.practicum.shareit.booking.exception.BookingUnknownStateException;
@@ -106,7 +107,7 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public Booking updateBooking(long ownerId, long bookingId, boolean approvedStatus) {
+    public BookingDtoResponse updateBooking(long ownerId, long bookingId, boolean approvedStatus) {
         Booking updatedBooking = bookingRepository.findById(bookingId)
                 .filter(b -> b.getItem().getOwner() == ownerId)
                 .orElseThrow(() -> new BookingNotFoundException(ownerId));
@@ -116,6 +117,6 @@ public class BookingServiceImplementation implements BookingService {
         updatedItem.setLastBooking(updatedBooking.getId());
         itemRepository.save(updatedItem);
         updatedBooking.setStatus(status);
-        return bookingRepository.save(updatedBooking);
+        return BookingMapper.bookingToResponse(bookingRepository.save(updatedBooking));
     }
 }

@@ -35,6 +35,4 @@ public class Item {
     private Long lastBooking;
     @Column(name = "next_booking")
     private Long nextBooking;
-    @Transient
-    private List<Comment> comments = new ArrayList<>();
 }
