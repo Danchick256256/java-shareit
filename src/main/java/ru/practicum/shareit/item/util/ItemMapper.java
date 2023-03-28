@@ -4,10 +4,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
-    public static Item dtoToItem(int ownerId, ItemDto itemDto) {
+    public static Item dtoToItem(long ownerId, ItemDto itemDto) {
         return Item.builder()
-                .ownerId(ownerId)
-                .id(GenerateItemId.getId())
+                .owner(ownerId)
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
