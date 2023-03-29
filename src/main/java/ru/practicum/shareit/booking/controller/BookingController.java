@@ -20,6 +20,7 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
     private final String userHeader = "X-Sharer-User-Id";
+
     @PostMapping
     public Booking createBooking(@RequestHeader(userHeader) int ownerId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("create.booking.request");
@@ -35,7 +36,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<Booking> getAllBookingsByOwnerId(@RequestHeader(userHeader) int ownerId,
-                                        @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
+                                                 @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
         log.info("get.all.bookings.request");
         return bookingService.getAllBookingsByOwnerId(ownerId, state).collect(Collectors.toList());
     }
@@ -45,6 +46,7 @@ public class BookingController {
         log.info("get.booking.by.id.request");
         return bookingService.getById(ownerId, bookingId);
     }
+
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse updateItem(@PathVariable long bookingId,
                                          @RequestHeader(userHeader) long ownerId,
