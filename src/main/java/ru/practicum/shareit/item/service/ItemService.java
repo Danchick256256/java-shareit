@@ -11,15 +11,15 @@ import java.util.stream.Stream;
 public interface ItemService {
     ItemDto createItem(long ownerId, ItemDto item);
 
-    Stream<Item> getAllItemsByOwnerId(long ownerId);
+    Stream<ItemDto> getAllItemsByOwnerId(long ownerId);
 
     ItemDto getItemById(long itemId);
 
-    Item updateItem(long ownerId, long itemId, ItemDto itemDto);
+    ItemDto updateItem(long ownerId, long itemId, ItemDto itemDto);
 
     void removeItem(long ownerId, long itemId);
 
-    Stream<Item> searchItems(String text);
+    Stream<ItemDto> searchItems(String text);
 
     CommentDto createComment(CommentDto dto, long author, long itemId);
 }

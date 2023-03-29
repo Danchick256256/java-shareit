@@ -13,7 +13,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.exception.ItemBadRequestException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -66,12 +65,22 @@ public class ItemServiceImplementation implements ItemService {
     }
 
     @Override
-    public Stream<Item> getAllItemsByOwnerId(long ownerId) {
-        return itemRepository.findAllByOwnerOrderByIdAsc(ownerId).stream();/*.map(item -> {
-            Optional<Booking> lastBooking = bookingRepository.findById(item.getLastBooking());
-            Optional<Booking> nextBooking = bookingRepository.findById(item.getNextBooking());
-            return ItemMapper.itemToDto(item, lastBooking.get(), nextBooking.get()) //ADD COMMENTS
-        });*/
+    public Stream<ItemDto> getAllItemsByOwnerId(long ownerId) {
+        return itemRepository.findAllByOwnerOrderByIdAsc(ownerId).stream().map(item -> {
+            BookingDtoToItem lastBooking = null;
+            BookingDtoToItem nextBooking = null;
+            Optional<Booking> lastBookingOptional = bookingRepository.findById(item.getLastBooking() == null ? -1 : item.getLastBooking());
+            if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
+            Optional<Booking> nextBookingOptional = bookingRepository.findById(item.getNextBooking() == null ? -1 : item.getNextBooking());
+            if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
+            return ItemMapper.itemToDto(item,
+                    lastBooking,
+                    nextBooking,
+                    commentRepository.findAllByItemIdOrderByIdAsc(item.getId())
+                            .stream()
+                            .map(CommentMapper::commentToDto)
+                            .collect(Collectors.toList()));
+        });
     }
 
     @Override
@@ -83,17 +92,35 @@ public class ItemServiceImplementation implements ItemService {
         if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
         Optional<Booking> nextBookingOptional = bookingRepository.findById(item.getNextBooking() == null ? -1 : item.getNextBooking());
         if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
-        return ItemMapper.itemToDto(item, lastBooking, nextBooking, commentRepository.findAllByItemIdOrderByIdAsc(itemId).stream().map(CommentMapper::commentToDto).collect(Collectors.toList()));
+        return ItemMapper.itemToDto(item,
+                lastBooking,
+                nextBooking,
+                commentRepository.findAllByItemIdOrderByIdAsc(itemId)
+                        .stream()
+                        .map(CommentMapper::commentToDto)
+                        .collect(Collectors.toList()));
     }
 
     @Override
-    public Item updateItem(long ownerId, long itemId, ItemDto itemDto) {
+    public ItemDto updateItem(long ownerId, long itemId, ItemDto itemDto) {
         Item updatedItem = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
         if (updatedItem.getOwner() != ownerId) throw new ItemNotFoundException(ownerId);
         if (itemDto.getDescription() != null) updatedItem.setDescription(itemDto.getDescription());
         if (itemDto.getName() != null) updatedItem.setName(itemDto.getName());
         if (itemDto.getAvailable() != null) updatedItem.setAvailable(itemDto.getAvailable());
-        return itemRepository.save(updatedItem);
+        BookingDtoToItem lastBooking = null;
+        BookingDtoToItem nextBooking = null;
+        Optional<Booking> lastBookingOptional = bookingRepository.findById(updatedItem.getLastBooking() == null ? -1 : updatedItem.getLastBooking());
+        if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
+        Optional<Booking> nextBookingOptional = bookingRepository.findById(updatedItem.getNextBooking() == null ? -1 : updatedItem.getNextBooking());
+        if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
+        return ItemMapper.itemToDto(itemRepository.save(updatedItem),
+                lastBooking,
+                nextBooking,
+                commentRepository.findAllByItemIdOrderByIdAsc(updatedItem.getId())
+                        .stream()
+                        .map(CommentMapper::commentToDto)
+                        .collect(Collectors.toList()));
     }
 
     @Override
@@ -105,10 +132,26 @@ public class ItemServiceImplementation implements ItemService {
     }
 
     @Override
-    public Stream<Item> searchItems(String text) {
+    public Stream<ItemDto> searchItems(String text) {
         if (text.isBlank()) {
             return Stream.empty();
         }
-        return itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text).stream();
+
+        return itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text).stream()
+                .map(item -> {
+                    BookingDtoToItem lastBooking = null;
+                    BookingDtoToItem nextBooking = null;
+                    Optional<Booking> lastBookingOptional = bookingRepository.findById(item.getLastBooking() == null ? -1 : item.getLastBooking());
+                    if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
+                    Optional<Booking> nextBookingOptional = bookingRepository.findById(item.getNextBooking() == null ? -1 : item.getNextBooking());
+                    if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
+                    return ItemMapper.itemToDto(item,
+                            lastBooking,
+                            nextBooking,
+                            commentRepository.findAllByItemIdOrderByIdAsc(item.getId())
+                                    .stream()
+                                    .map(CommentMapper::commentToDto)
+                                    .collect(Collectors.toList()));
+                });
     }
 }

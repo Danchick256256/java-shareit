@@ -24,7 +24,7 @@ public class ItemController {
     private final String userHeader = "X-Sharer-User-Id";
 
     @GetMapping
-    public List<Item> getAllItems(@RequestHeader(userHeader) int ownerId) {
+    public List<ItemDto> getAllItems(@RequestHeader(userHeader) int ownerId) {
         log.info("get all items by owner id = {}", ownerId);
         return itemService.getAllItemsByOwnerId(ownerId).collect(Collectors.toList());
     }
@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestHeader(userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
+    public ItemDto updateItem(@RequestHeader(userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
         log.info("update item by owner id = {}, item id = {}, data = {}", ownerId, itemId, itemDto);
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
@@ -54,7 +54,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestParam String text) {
+    public List<ItemDto> searchItem(@RequestParam String text) {
         log.info("search item by text = {}", text);
         return itemService.searchItems(text).collect(Collectors.toList());
     }

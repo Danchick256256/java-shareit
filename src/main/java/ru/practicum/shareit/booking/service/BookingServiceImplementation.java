@@ -100,7 +100,7 @@ public class BookingServiceImplementation implements BookingService {
             case CURRENT:
                 return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartAsc(ownerId, now, now).stream();
             case PAST:
-                return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartAsc(ownerId, now).stream();
+                return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(ownerId, now).stream();
             default:
                 throw new BookingNotFoundException(state);
         }
