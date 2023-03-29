@@ -71,12 +71,12 @@ public class BookingServiceImplementation implements BookingService {
                 return bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.WAITING).stream();
             case REJECTED:
                 return bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.REJECTED).stream();
-            case FUTURE: // не понимаю почему не выдает то что в тестах
-                return bookingRepository.findAllByBookerIdAndStartAfterOrderByStartAsc(bookerId, now).stream();
+            case FUTURE:
+                return bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(bookerId, now).stream();
             case CURRENT:
-                return bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartAsc(bookerId, now, now).stream();
+                return bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, now, now).stream();
             case PAST:
-                return bookingRepository.findAllByBookerIdAndStartBeforeOrderByStartAsc(bookerId, now).stream();
+                return bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(bookerId, now).stream();
             default:
                 throw new BookingNotFoundException(state);
         }
@@ -96,7 +96,7 @@ public class BookingServiceImplementation implements BookingService {
             case REJECTED:
                 return bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.REJECTED).stream();
             case FUTURE:
-                return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartAsc(ownerId, now).stream();
+                return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(ownerId, now).stream();
             case CURRENT:
                 return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartAsc(ownerId, now, now).stream();
             case PAST:
