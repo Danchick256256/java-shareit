@@ -1,15 +1,9 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
-import ru.practicum.shareit.booking.model.Booking;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Entity
 @Table(name = "items")
 @RequiredArgsConstructor

@@ -4,7 +4,6 @@ package ru.practicum.shareit.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "users")

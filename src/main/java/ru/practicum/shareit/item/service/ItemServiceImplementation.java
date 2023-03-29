@@ -56,7 +56,8 @@ public class ItemServiceImplementation implements ItemService {
     public ItemDto createItem(long ownerId, ItemDto itemDto) {
         if (itemDto.getAvailable() == null) throw new ItemBadRequestException("Missed available");
         if (itemDto.getName() == null || itemDto.getName().isBlank()) throw new ItemBadRequestException("Missed name");
-        if (itemDto.getDescription() == null || itemDto.getDescription().isBlank()) throw new ItemBadRequestException("Missed description");
+        if (itemDto.getDescription() == null || itemDto.getDescription().isBlank())
+            throw new ItemBadRequestException("Missed description");
         if (userService.getUserById(ownerId) == null) throw new UserNotFoundException(ownerId);
         return ItemMapper.itemToDto(
                 itemRepository.save(
@@ -70,9 +71,11 @@ public class ItemServiceImplementation implements ItemService {
             BookingDtoToItem lastBooking = null;
             BookingDtoToItem nextBooking = null;
             Optional<Booking> lastBookingOptional = bookingRepository.findById(item.getLastBooking() == null ? -1 : item.getLastBooking());
-            if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
+            if (lastBookingOptional.isPresent())
+                lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
             Optional<Booking> nextBookingOptional = bookingRepository.findById(item.getNextBooking() == null ? -1 : item.getNextBooking());
-            if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
+            if (nextBookingOptional.isPresent())
+                nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
             return ItemMapper.itemToDto(item,
                     lastBooking,
                     nextBooking,
@@ -142,9 +145,11 @@ public class ItemServiceImplementation implements ItemService {
                     BookingDtoToItem lastBooking = null;
                     BookingDtoToItem nextBooking = null;
                     Optional<Booking> lastBookingOptional = bookingRepository.findById(item.getLastBooking() == null ? -1 : item.getLastBooking());
-                    if (lastBookingOptional.isPresent()) lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
+                    if (lastBookingOptional.isPresent())
+                        lastBooking = BookingMapper.bookingDtoToItem(lastBookingOptional.get());
                     Optional<Booking> nextBookingOptional = bookingRepository.findById(item.getNextBooking() == null ? -1 : item.getNextBooking());
-                    if (nextBookingOptional.isPresent()) nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
+                    if (nextBookingOptional.isPresent())
+                        nextBooking = BookingMapper.bookingDtoToItem(nextBookingOptional.get());
                     return ItemMapper.itemToDto(item,
                             lastBooking,
                             nextBooking,

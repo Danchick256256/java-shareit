@@ -2,12 +2,9 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -61,7 +58,7 @@ public class ItemController {
 
     @PostMapping("{itemId}/comment")
     public CommentDto addComment(@Valid @RequestBody CommentDto dto, @RequestHeader(userHeader) long author,
-                              @PathVariable long itemId) {
+                                 @PathVariable long itemId) {
         log.info("create comment by author id = {}, item id = {}, data = {}", author, itemId, dto.toString());
         return itemService.createComment(dto, author, itemId);
     }

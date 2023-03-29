@@ -6,7 +6,6 @@ import ru.practicum.shareit.booking.dto.BookingDtoToItem;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.util.ItemMapper;
 import ru.practicum.shareit.user.model.User;
 
 public class BookingMapper {

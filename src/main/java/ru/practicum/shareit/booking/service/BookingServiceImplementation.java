@@ -31,12 +31,17 @@ public class BookingServiceImplementation implements BookingService {
     private ItemRepository itemRepository;
     @Autowired
     private BookingRepository bookingRepository;
+
     @Override
     public Booking createBooking(long ownerId, BookingDto bookingDto) {
-        if (bookingDto.getEnd().isBefore(LocalDateTime.now())) throw new BookingBadRequestException(bookingDto.getItemId());
-        if (bookingDto.getStart().isBefore(LocalDateTime.now())) throw new BookingBadRequestException(bookingDto.getItemId());
-        if (bookingDto.getStart().equals(bookingDto.getEnd())) throw new BookingBadRequestException(bookingDto.getItemId());
-        if (bookingDto.getStart().isAfter(bookingDto.getEnd())) throw new BookingBadRequestException(bookingDto.getItemId());
+        if (bookingDto.getEnd().isBefore(LocalDateTime.now()))
+            throw new BookingBadRequestException(bookingDto.getItemId());
+        if (bookingDto.getStart().isBefore(LocalDateTime.now()))
+            throw new BookingBadRequestException(bookingDto.getItemId());
+        if (bookingDto.getStart().equals(bookingDto.getEnd()))
+            throw new BookingBadRequestException(bookingDto.getItemId());
+        if (bookingDto.getStart().isAfter(bookingDto.getEnd()))
+            throw new BookingBadRequestException(bookingDto.getItemId());
         User user = userRepository.findById(ownerId).orElseThrow(()
                 -> new UserNotFoundException(ownerId));
         Item item = itemRepository.findById(bookingDto.getItemId())
