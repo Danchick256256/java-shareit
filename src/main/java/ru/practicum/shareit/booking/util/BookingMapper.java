@@ -31,8 +31,8 @@ public class BookingMapper {
                 .id(booking.getId())
                 .booker(booking.getBooker())
                 .item(booking.getItem())
-                .start("undefined")
-                .end("undefined")
+                .start(booking.getStart())
+                .end(booking.getEnd())
                 .status(booking.getStatus())
                 .build();
     }

@@ -6,6 +6,8 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @Builder
@@ -18,8 +20,8 @@ public class BookingDtoResponse {
     private Long id;
     private User booker;
     private Item item;
-    private String start;
-    private String end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private BookingState status;
 
 }
