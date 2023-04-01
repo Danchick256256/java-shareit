@@ -23,7 +23,6 @@ import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,7 +71,7 @@ public class ItemServiceImplementation implements ItemService {
             }
             BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
             BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-            if (nextBooking != null && lastBooking != null ) {
+            if (nextBooking != null && lastBooking != null) {
                 nextBooking.setId(4L);
                 nextBooking.setBookerId(5L);
 
@@ -102,7 +101,7 @@ public class ItemServiceImplementation implements ItemService {
             lastBooking.setBookerId(1L);
             lastBooking.setId(8L);
         }
-        if (nextBooking != null && lastBooking != null ) {
+        if (nextBooking != null && lastBooking != null) {
             nextBooking.setId(4L);
             nextBooking.setBookerId(5L);
 
