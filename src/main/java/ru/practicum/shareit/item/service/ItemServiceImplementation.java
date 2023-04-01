@@ -95,23 +95,6 @@ public class ItemServiceImplementation implements ItemService {
                 .collect(Collectors.toList());
         BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
         BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-
-        if (ownerId == 4 && itemId == 6) {
-            lastBooking = new BookingDtoToItem();
-            lastBooking.setBookerId(1L);
-            lastBooking.setId(8L);
-        }
-        if (nextBooking != null && lastBooking != null) {
-            nextBooking.setId(4L);
-            nextBooking.setBookerId(5L);
-
-            lastBooking.setBookerId(1L);
-            lastBooking.setId(1L);
-            if (ownerId == 4 && itemId == 2) {
-                lastBooking.setId(6L);
-            }
-        }
-
         return ItemMapper.itemToDto(item,
                 lastBooking,
                 nextBooking,
