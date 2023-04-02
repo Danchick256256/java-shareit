@@ -34,16 +34,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByItemIdAndBookerId(long itemId, long bookerId);
 
-    Optional<Booking> findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(long itemId, long ownerId, LocalDateTime timeEnd, BookingState state);
-
-    Optional<Booking> findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(long itemId, long ownerId, LocalDateTime timeStart, BookingState state);
-
     @Query(value = "SELECT * FROM Bookings b " +
             "LEFT OUTER JOIN ITEMS item_1 " +
             "ON b.item = item_1.id " +
             "WHERE item_1.id = ?1 " +
             "AND item_1.owner = ?2 " +
-            "AND b.stop < CURRENT_TIMESTAMP " +
+            "AND b.start < CURRENT_TIMESTAMP " +
             "ORDER BY b.stop desc limit 1", nativeQuery = true)
     Optional<Booking> findLastBooking(Long itemId, Long ownerId);
 

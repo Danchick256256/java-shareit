@@ -93,12 +93,8 @@ public class ItemServiceImplementation implements ItemService {
                 .stream()
                 .map(CommentMapper::commentToDto)
                 .collect(Collectors.toList());
-        BookingDtoToItem lastBooking = null;
-        BookingDtoToItem nextBooking = null;
-        if (item.getOwner() == ownerId) {
-            lastBooking = bookingRepository.findLastBooking(itemId, item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
-            nextBooking = bookingRepository.findNextBooking(itemId, item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
-        }
+        BookingDtoToItem lastBooking = bookingRepository.findLastBooking(itemId, ownerId).map(BookingMapper::bookingDtoToItem).orElse(null);
+        BookingDtoToItem nextBooking = bookingRepository.findNextBooking(itemId, ownerId).map(BookingMapper::bookingDtoToItem).orElse(null);
         if (lastBooking == null) {
             nextBooking = null;
         }
@@ -142,8 +138,8 @@ public class ItemServiceImplementation implements ItemService {
 
         return itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text).stream()
                 .map(item -> {
-                    BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-                    BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
+                    BookingDtoToItem lastBooking = bookingRepository.findLastBooking(item.getId(), item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
+                    BookingDtoToItem nextBooking = bookingRepository.findNextBooking(item.getId(), item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
                     return ItemMapper.itemToDto(item,
                             lastBooking,
                             nextBooking,
