@@ -69,8 +69,8 @@ public class ItemServiceImplementation implements ItemService {
                         .map(CommentMapper::commentToDto)
                         .collect(Collectors.toList());
             }
-            BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-            BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(item.getId(), item.getOwner(), LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
+            BookingDtoToItem lastBooking = bookingRepository.findLastBooking(item.getId(), item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
+            BookingDtoToItem nextBooking = bookingRepository.findNextBooking(item.getId(), item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
             if (nextBooking != null && lastBooking != null) {
                 nextBooking.setId(4L);
                 nextBooking.setBookerId(5L);
@@ -93,8 +93,15 @@ public class ItemServiceImplementation implements ItemService {
                 .stream()
                 .map(CommentMapper::commentToDto)
                 .collect(Collectors.toList());
-        BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-        BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
+        BookingDtoToItem lastBooking = null;
+        BookingDtoToItem nextBooking = null;
+        if (item.getOwner() == ownerId) {
+            lastBooking = bookingRepository.findLastBooking(itemId, item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
+            nextBooking = bookingRepository.findNextBooking(itemId, item.getOwner()).map(BookingMapper::bookingDtoToItem).orElse(null);
+        }
+        if (lastBooking == null) {
+            nextBooking = null;
+        }
         return ItemMapper.itemToDto(item,
                 lastBooking,
                 nextBooking,
@@ -108,8 +115,8 @@ public class ItemServiceImplementation implements ItemService {
         if (itemDto.getDescription() != null) updatedItem.setDescription(itemDto.getDescription());
         if (itemDto.getName() != null) updatedItem.setName(itemDto.getName());
         if (itemDto.getAvailable() != null) updatedItem.setAvailable(itemDto.getAvailable());
-        BookingDtoToItem lastBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndStartAfterAndStatusOrderByStartDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
-        BookingDtoToItem nextBooking = bookingRepository.findFirstByItemIdAndItemOwnerAndEndBeforeAndStatusOrderByEndDesc(itemId, ownerId, LocalDateTime.now(), BookingState.APPROVED).map(BookingMapper::bookingDtoToItem).orElse(null);
+        BookingDtoToItem lastBooking = bookingRepository.findLastBooking(itemId, ownerId).map(BookingMapper::bookingDtoToItem).orElse(null);
+        BookingDtoToItem nextBooking = bookingRepository.findNextBooking(itemId, ownerId).map(BookingMapper::bookingDtoToItem).orElse(null);
         return ItemMapper.itemToDto(itemRepository.save(updatedItem),
                 lastBooking,
                 nextBooking,
