@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,7 @@ public class Item {
     private Long lastBooking;
     @Column(name = "next_booking")
     private Long nextBooking;
+    @Column(name = "request")
+    @JsonProperty(value = "requestId")
+    private Long request;
 }

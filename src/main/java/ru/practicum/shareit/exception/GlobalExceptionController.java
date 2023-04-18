@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.practicum.shareit.booking.exception.BookingBadRequestException;
 import ru.practicum.shareit.booking.exception.BookingUnknownStateException;
 import ru.practicum.shareit.item.exception.ItemBadRequestException;
+import ru.practicum.shareit.requests.exception.RequestsBadRequestException;
+import ru.practicum.shareit.requests.exception.RequestsNotFoundException;
 import ru.practicum.shareit.user.exception.UserNotUniqueEmailException;
 
 import javax.persistence.EntityNotFoundException;
@@ -52,6 +54,22 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> errorResponse(BookingUnknownStateException e) {
         ApiError apiError = new ApiError(
                 HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(
+                apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> errorResponse(RequestsBadRequestException e) {
+        ApiError apiError = new ApiError(
+                HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        return new ResponseEntity<>(
+                apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> errorResponse(RequestsNotFoundException e) {
+        ApiError apiError = new ApiError(
+                HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }

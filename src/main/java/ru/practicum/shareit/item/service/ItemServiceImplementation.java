@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.util.CommentMapper;
 import ru.practicum.shareit.item.util.ItemMapper;
+import ru.practicum.shareit.requests.service.RequestsService;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -33,6 +34,7 @@ public class ItemServiceImplementation implements ItemService {
     private final CommentRepository commentRepository;
     private final ItemRepository itemRepository;
     private final UserService userService;
+    private final RequestsService requestsService;
 
     @Override
     public CommentDto createComment(CommentDto dto, long authorId, long itemId) {
@@ -42,7 +44,6 @@ public class ItemServiceImplementation implements ItemService {
                 .findAny().orElseThrow(() -> new ItemBadRequestException(itemId));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
         User user = userService.getUserById(authorId);
-
         return CommentMapper.commentToDto(commentRepository.save(CommentMapper.dtoToComment(dto, item, user)));
     }
 
@@ -53,6 +54,7 @@ public class ItemServiceImplementation implements ItemService {
         if (itemDto.getDescription() == null || itemDto.getDescription().isBlank())
             throw new ItemBadRequestException("Missed description");
         if (userService.getUserById(ownerId) == null) throw new UserNotFoundException(ownerId);
+        //if (itemDto.getRequestId() != null) requestsService.deleteRequest(itemDto.getRequestId());
         return ItemMapper.itemToDto(
                 itemRepository.save(
                         ItemMapper.dtoToItem(
