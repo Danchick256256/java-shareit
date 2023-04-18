@@ -1,79 +1,57 @@
 package ru.practicum.shareit.user.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.util.EmailValidator;
-import ru.practicum.shareit.util.BadRequestException;
-import ru.practicum.shareit.util.ConflictRequestException;
-import ru.practicum.shareit.util.NotFoundException;
+import ru.practicum.shareit.user.util.UserMapper;
 
+import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getAllUsers() {
-        log.info("get.all.users.request");
+        log.info("get all users request");
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}")
-    public User getUserById(@PathVariable int userId) {
-        log.info("get.user.by.id.request");
-        return userService.getUserById(userId);
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUserById(@PathVariable long id) {
+        log.info("get user by id request with id = {}", id);
+        return userService.getUserById(id);
     }
 
     @PostMapping
-    public User createUser(@RequestBody UserDto userDto) {
-        log.info("create.user.request");
-        if (EmailValidator.isValid(userDto.getEmail())) {
-            return userService.createUser(userDto);
-        } else {
-            throw new BadRequestException("email is wrong");
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@Valid @RequestBody UserDto dto) {
+        log.info("create user request with data = {}", dto.toString());
+        return userService.createUser(UserMapper.toUser(dto));
     }
 
-    @PatchMapping("/{userId}")
-    public User updateUser(@PathVariable int userId, @RequestBody UserDto userDto) {
-        log.info("update.user.request");
-        return userService.updateUser(userId, userDto);
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@RequestBody UserDto dto, @PathVariable long id) {
+        log.info("update user by id request with id = {}, data = {}", id, dto.toString());
+        return userService.updateUser(id, UserMapper.toUser(dto));
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable int userId) {
-        log.info("delete.user.request");
-        userService.removeUser(userId);
-    }
-
-    @ExceptionHandler({NotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> notFoundExceptionHandler() {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({BadRequestException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> badRequestExceptionHandler() {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({ConflictRequestException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<Object> conflictRequestExceptionHandler() {
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable long id) {
+        log.info("delete user by id request with id = {}", id);
+        userService.deleteUser(id);
     }
 }
+

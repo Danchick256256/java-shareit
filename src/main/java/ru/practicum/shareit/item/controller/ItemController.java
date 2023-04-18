@@ -1,75 +1,64 @@
 package ru.practicum.shareit.item.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.constants.Constants;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.util.BadRequestException;
-import ru.practicum.shareit.util.NotFoundException;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 @Slf4j
 public class ItemController {
-    @Autowired
-    private ItemService itemService;
-    private final String userHeader = "X-Sharer-User-Id";
+    private final ItemService itemService;
 
     @GetMapping
-    public List<Item> getAllItems(@RequestHeader(userHeader) int ownerId) {
-        log.info("get.all.items.request");
-        return itemService.getAllItemsByOwnerId(ownerId).collect(Collectors.toList());
+    public List<ItemDto> getAllItems(@RequestHeader(Constants.userHeader) int ownerId) {
+        log.info("get all items by owner id = {}", ownerId);
+        return itemService.getAllItemsByOwnerId(ownerId);
     }
 
     @GetMapping("/{itemId}")
-    public Item getItemById(@PathVariable int itemId) {
-        log.info("get.item.by.id.request");
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@PathVariable int itemId, @RequestHeader(Constants.userHeader) int ownerId) {
+        log.info("get item by id = {}, user id = {}", itemId, ownerId);
+        return itemService.getItemById(itemId, ownerId);
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader(userHeader) int ownerId, @RequestBody ItemDto itemDto) {
-        log.info("create.item.request");
+    public ItemDto createItem(@RequestHeader(Constants.userHeader) int ownerId, @RequestBody ItemDto itemDto) {
+        log.info("create item by owner id = {}, data = {}", ownerId, itemDto.toString());
         return itemService.createItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestHeader(userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
-        log.info("update.item.request");
+    public ItemDto updateItem(@RequestHeader(Constants.userHeader) int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
+        log.info("update item by owner id = {}, item id = {}, data = {}", ownerId, itemId, itemDto);
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @DeleteMapping
-    public void removeItem(@RequestHeader(userHeader) int ownerId, @RequestBody int itemId) {
-        log.info("remove.item.request");
+    public void removeItem(@RequestHeader(Constants.userHeader) int ownerId, @RequestBody int itemId) {
+        log.info("delete item by owner id = {}, item id = {}", ownerId, itemId);
         itemService.removeItem(ownerId, itemId);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestHeader(userHeader) int ownerId, @RequestParam String text) {
-        log.info("search.item.request");
-        return itemService.searchItems(text).collect(Collectors.toList());
+    public List<ItemDto> searchItem(@RequestParam String text) {
+        log.info("search item by text = {}", text);
+        return itemService.searchItems(text);
     }
 
-    @ExceptionHandler({NotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> notFoundExceptionHandler() {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({BadRequestException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> badRequestExceptionHandler() {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("{itemId}/comment")
+    public CommentDto addComment(@Valid @RequestBody CommentDto dto, @RequestHeader(Constants.userHeader) long author,
+                                 @PathVariable long itemId) {
+        log.info("create comment by author id = {}, item id = {}, data = {}", author, itemId, dto.toString());
+        return itemService.createComment(dto, author, itemId);
     }
 }

@@ -1,21 +1,13 @@
 package ru.practicum.shareit.user.util;
 
-import ru.practicum.shareit.user.dto.UserDto;
+
+import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 public class UserMapper {
-    public static UserDto userToDto(User user) {
-        return UserDto.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
-    }
-
-    public static User dtoToUser(UserDto userDto) {
+    public static User toUser(UserDto userDto) {
         return User.builder()
-                .id(GenerateUserId.getId())
                 .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
+                .email(userDto.getEmail()).build();
     }
 }
