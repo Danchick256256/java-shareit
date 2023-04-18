@@ -14,7 +14,6 @@ import ru.practicum.shareit.requests.dto.RequestsDto;
 import ru.practicum.shareit.requests.dto.RequestsResponse;
 import ru.practicum.shareit.requests.service.RequestsService;
 import ru.practicum.shareit.user.DTO.UserDto;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.util.UserMapper;
 
