@@ -27,17 +27,29 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<Booking> getAllBookings(@RequestHeader(Constants.userHeader) int ownerId,
-                                        @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
+    public List<Booking> getAllBookingsWithSize(@RequestHeader(Constants.userHeader) int ownerId,
+                                                @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
+                                                @RequestParam(value = "from", defaultValue = "-256") Long from,
+                                                @RequestParam(value = "size", defaultValue = "-256") Long size) {
         log.info("get.all.bookings.request");
-        return bookingService.getAll(ownerId, state);
+        if (from == -256 || size == -256) {
+            return bookingService.getAll(ownerId, state);
+        } else {
+            return bookingService.getAllWithSize(ownerId, state, from, size);
+        }
     }
 
     @GetMapping("/owner")
-    public List<Booking> getAllBookingsByOwnerId(@RequestHeader(Constants.userHeader) int ownerId,
-                                                 @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
+    public List<Booking> getAllBookingsByOwnerIdWithSize(@RequestHeader(Constants.userHeader) int ownerId,
+                                                         @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
+                                                         @RequestParam(value = "from", defaultValue = "-256") Long from,
+                                                         @RequestParam(value = "size", defaultValue = "-256") Long size) {
         log.info("get.all.bookings.request");
-        return bookingService.getAllBookingsByOwnerId(ownerId, state);
+        if (from == -256 || size == -256) {
+            return bookingService.getAllByOwnerId(ownerId, state);
+        } else {
+            return bookingService.getAllByOwnerIdWithSize(ownerId, state, from, size);
+        }
     }
 
     @GetMapping("/{bookingId}")

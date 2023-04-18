@@ -52,4 +52,4 @@ create table if not exists COMMENTS (
   constraint comments_author_id_fk foreign key (author) references USERS
 );
 
-ALTER TABLE BOOKINGS ADD CONSTRAINT bookings_item_id_fk FOREIGN KEY (item) REFERENCES ITEMS(id);
+--ALTER TABLE BOOKINGS ADD CONSTRAINT bookings_item_id_fk FOREIGN KEY (item) REFERENCES ITEMS(id);
