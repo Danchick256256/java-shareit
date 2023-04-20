@@ -35,14 +35,8 @@ class RequestsServiceTests {
 
     @Test
     @Order(1)
-    @Sql(value = { "/test-schema.sql" })
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void createTest() {
-        UserDto userCreateDto = UserDto.builder()
-                .name("user")
-                .email("user@gmail.com")
-                .build();
-        userService.createUser(UserMapper.toUser(userCreateDto));
-
         long userId = 1L;
         RequestsDto incomeDto = RequestsDto.builder()
                 .description("text")
@@ -63,15 +57,10 @@ class RequestsServiceTests {
 
     @Test
     @Order(2)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void getByIdTest() {
         long requestId = 1L;
         long userId = 1L;
-
-        UserDto userCreateDto = UserDto.builder()
-                .name("user")
-                .email("user@gmail.com")
-                .build();
-        userService.createUser(UserMapper.toUser(userCreateDto));
 
         RequestsDto incomeDto = RequestsDto.builder()
                 .description("text")
@@ -95,13 +84,8 @@ class RequestsServiceTests {
 
     @Test
     @Order(3)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void getForOwnerTest() {
-        UserDto userCreateDto = UserDto.builder()
-                .name("user")
-                .email("11user@gmail.com")
-                .build();
-        userService.createUser(UserMapper.toUser(userCreateDto));
-
         RequestsDto incomeDto = RequestsDto.builder()
                 .description("text")
                 .build();

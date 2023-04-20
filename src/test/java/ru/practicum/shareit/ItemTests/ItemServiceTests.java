@@ -35,13 +35,8 @@ class ItemServiceTests {
 
     @Test
     @Order(1)
+    @Sql(value = { "/test-schema.sql" })
     void createItemTest() {
-        UserDto userCreateDto = UserDto.builder()
-                .name("user")
-                .email("24user@gmail.com")
-                .build();
-        userService.createUser(UserMapper.toUser(userCreateDto));
-
         ItemDto itemDto = ItemDto.builder()
                 .name("item")
                 .description("item")
@@ -61,6 +56,7 @@ class ItemServiceTests {
 
     @Test
     @Order(2)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void updateAvailableItemTest() {
         createItemTest();
         ItemDto itemDto = ItemDto.builder()
@@ -71,7 +67,7 @@ class ItemServiceTests {
         Assertions.assertThat(itemDtoResponse)
                 .isPresent()
                 .hasValueSatisfying(i -> {
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 1L);
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 2L);
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("name", "item");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "item");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);

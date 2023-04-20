@@ -1,6 +1,7 @@
 package ru.practicum.shareit.UserTests;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Slf4j
 class UserServiceTests {
     private final UserService userService;
 
@@ -35,8 +37,9 @@ class UserServiceTests {
     void createTest() {
         UserDto userCreateDto = UserDto.builder()
                 .name("user")
-                .email("22user@gmail.com")
+                .email("user@gmail.com")
                 .build();
+
         Optional<User> user = Optional.of(userService.createUser(UserMapper.toUser(userCreateDto)));
 
         assertThat(user)
@@ -44,18 +47,20 @@ class UserServiceTests {
                 .hasValueSatisfying(f -> {
                             assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
                             assertThat(f).hasFieldOrPropertyWithValue("name", "user");
-                            assertThat(f).hasFieldOrPropertyWithValue("email", "22user@gmail.com");
+                            assertThat(f).hasFieldOrPropertyWithValue("email", "user@gmail.com");
                         }
                 );
     }
 
     @Test
     @Order(1)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void updateTest() {
         UserDto userUpdate = UserDto.builder()
                 .name("userUpdated")
                 .email("userUpdated@gmail.com")
                 .build();
+
         Optional<User> userDto = Optional.of(userService.updateUser(1L, UserMapper.toUser(userUpdate)));
 
         assertThat(userDto)
@@ -70,6 +75,7 @@ class UserServiceTests {
 
     @Test
     @Order(2)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void getByIdCorrectTest() {
         Optional<User> user = Optional.of(userService.getUserById(1L));
 
@@ -77,8 +83,8 @@ class UserServiceTests {
                 .isPresent()
                 .hasValueSatisfying(f -> {
                             assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
-                            assertThat(f).hasFieldOrPropertyWithValue("name", "userUpdated");
-                            assertThat(f).hasFieldOrPropertyWithValue("email", "userUpdated@gmail.com");
+                            assertThat(f).hasFieldOrPropertyWithValue("name", "user");
+                            assertThat(f).hasFieldOrPropertyWithValue("email", "user@gmail.com");
                         }
                 );
     }
@@ -91,12 +97,8 @@ class UserServiceTests {
 
     @Test
     @Order(4)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void getAllTest() {
-        UserDto userDto = UserDto.builder()
-                .name("secondUser")
-                .email("secondUser@gmail.com")
-                .build();
-        userService.createUser(UserMapper.toUser(userDto));
         List<User> users = userService.getAllUsers();
 
         assertThat(users)
@@ -107,6 +109,7 @@ class UserServiceTests {
 
     @Test
     @Order(5)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void deleteByIdTest() {
         userService.deleteUser(1L);
         List<User> users = userService.getAllUsers();
