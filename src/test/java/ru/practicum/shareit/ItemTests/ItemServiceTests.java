@@ -34,19 +34,14 @@ class ItemServiceTests {
     private final BookingService bookingService;
 
     @Test
-    @Order(0)
-    @Sql(value = {"/test-schema.sql"})
-    void createUsersTest() {
+    @Order(1)
+    void createItemTest() {
         UserDto userCreateDto = UserDto.builder()
                 .name("user")
                 .email("24user@gmail.com")
                 .build();
         userService.createUser(UserMapper.toUser(userCreateDto));
-    }
 
-    @Test
-    @Order(1)
-    void createItemTest() {
         ItemDto itemDto = ItemDto.builder()
                 .name("item")
                 .description("item")
@@ -67,6 +62,7 @@ class ItemServiceTests {
     @Test
     @Order(2)
     void updateAvailableItemTest() {
+        createItemTest();
         ItemDto itemDto = ItemDto.builder()
                 .available(true)
                 .build();
@@ -104,6 +100,7 @@ class ItemServiceTests {
     @Test
     @Order(5)
     void getByOwnerIdTest() {
+        updateAvailableItemTest();
         Optional<ItemDto> itemDto = Optional.of(itemService.getItemById(1L, 1L));
 
         Assertions.assertThat(itemDto)
@@ -139,6 +136,7 @@ class ItemServiceTests {
     @Test
     @Order(7)
     void getAllByTextTest() {
+        getByOwnerIdTest();
         List<ItemDto> items = itemService.searchItems("item");
 
         Assertions.assertThat(items)
@@ -151,6 +149,7 @@ class ItemServiceTests {
     @Test
     @Order(8)
     void getAllByOwnerIdTest() {
+        getAllByTextTest();
         List<ItemDto> items = itemService.getAllItemsByOwnerId(1L);
 
         Assertions.assertThat(items)
@@ -169,6 +168,7 @@ class ItemServiceTests {
     @Test
     @Order(9)
     void createItemWithRequestTest() {
+        getAllByOwnerIdTest();
         ItemDto itemDto = ItemDto.builder()
                 .name("item")
                 .description("user 3 item")
