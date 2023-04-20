@@ -58,7 +58,6 @@ class ItemServiceTests {
     @Order(2)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void updateAvailableItemTest() {
-        createItemTest();
         ItemDto itemDto = ItemDto.builder()
                 .available(true)
                 .build();
@@ -67,9 +66,9 @@ class ItemServiceTests {
         Assertions.assertThat(itemDtoResponse)
                 .isPresent()
                 .hasValueSatisfying(i -> {
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 2L);
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 1L);
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("name", "item");
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "item");
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "description");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);
                 });
     }
@@ -95,8 +94,8 @@ class ItemServiceTests {
 
     @Test
     @Order(5)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getByOwnerIdTest() {
-        updateAvailableItemTest();
         Optional<ItemDto> itemDto = Optional.of(itemService.getItemById(1L, 1L));
 
         Assertions.assertThat(itemDto)
@@ -104,7 +103,7 @@ class ItemServiceTests {
                 .hasValueSatisfying(i -> {
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 1L);
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("name", "item");
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "item");
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "description");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);
                     Assertions.assertThat(i).hasFieldOrProperty("lastBooking");
                     Assertions.assertThat(i).hasFieldOrProperty("nextBooking");
@@ -115,6 +114,7 @@ class ItemServiceTests {
 
     @Test
     @Order(6)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getByWrongOwnerId() {
         Optional<ItemDto> itemDto = Optional.of(itemService.getItemById(1L, 3L));
 
@@ -123,7 +123,7 @@ class ItemServiceTests {
                 .hasValueSatisfying(i -> {
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 1L);
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("name", "item");
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "item");
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "description");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);
                     Assertions.assertThat(i.getLastBooking()).isNull();
                 });
@@ -131,6 +131,7 @@ class ItemServiceTests {
 
     @Test
     @Order(7)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByTextTest() {
         getByOwnerIdTest();
         List<ItemDto> items = itemService.searchItems("item");
@@ -144,6 +145,7 @@ class ItemServiceTests {
 
     @Test
     @Order(8)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByOwnerIdTest() {
         getAllByTextTest();
         List<ItemDto> items = itemService.getAllItemsByOwnerId(1L);
@@ -153,18 +155,12 @@ class ItemServiceTests {
         Assertions.assertThat(items.get(0))
                 .hasFieldOrPropertyWithValue("name", "item");
 
-        items = itemService.getAllItemsByOwnerId(1L);
-
-        Assertions.assertThat(items)
-                .hasSize(1);
-        Assertions.assertThat(items.get(0))
-                .hasFieldOrPropertyWithValue("name", "item");
     }
 
     @Test
     @Order(9)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-request.sql" })
     void createItemWithRequestTest() {
-        getAllByOwnerIdTest();
         ItemDto itemDto = ItemDto.builder()
                 .name("item")
                 .description("user 3 item")
