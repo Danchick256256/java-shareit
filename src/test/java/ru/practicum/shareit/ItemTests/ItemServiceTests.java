@@ -3,7 +3,6 @@ package ru.practicum.shareit.ItemTests;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
@@ -15,9 +14,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.util.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +31,7 @@ class ItemServiceTests {
     private final BookingService bookingService;
 
     @Test
-    @Order(1)
-    @Sql(value = { "/test-schema.sql" })
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void createItemTest() {
         ItemDto itemDto = ItemDto.builder()
                 .name("item")
@@ -55,7 +51,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(2)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void updateAvailableItemTest() {
         ItemDto itemDto = ItemDto.builder()
@@ -74,7 +69,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(3)
     void updateUnknownItemTest() {
         ItemDto itemDto = ItemDto.builder()
                 .name("updated item")
@@ -87,13 +81,11 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(4)
     void getByWrongIdTest() {
         assertThrows(ItemNotFoundException.class, () -> itemService.getItemById(100L, 1L));
     }
 
     @Test
-    @Order(5)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getByOwnerIdTest() {
         Optional<ItemDto> itemDto = Optional.of(itemService.getItemById(1L, 1L));
@@ -113,7 +105,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(6)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getByWrongOwnerId() {
         Optional<ItemDto> itemDto = Optional.of(itemService.getItemById(1L, 3L));
@@ -130,7 +121,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(7)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByTextTest() {
         getByOwnerIdTest();
@@ -144,7 +134,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(8)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByOwnerIdTest() {
         getAllByTextTest();
@@ -158,7 +147,6 @@ class ItemServiceTests {
     }
 
     @Test
-    @Order(9)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-request.sql" })
     void createItemWithRequestTest() {
         ItemDto itemDto = ItemDto.builder()
