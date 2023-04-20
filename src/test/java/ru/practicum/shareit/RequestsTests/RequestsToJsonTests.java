@@ -1,4 +1,4 @@
-package ru.practicum.shareit.UserTests;
+package ru.practicum.shareit.RequestsTests;
 
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
@@ -7,25 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
+import ru.practicum.shareit.requests.dto.RequestsDto;
+import ru.practicum.shareit.requests.model.Requests;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Optional;
 
 @JsonTest
-class UserToJsonTests {
+public class RequestsToJsonTests {
     @Autowired
-    private JacksonTester<User> json;
+    private JacksonTester<RequestsDto> json;
 
     @Test
     @SneakyThrows
     void userDtoTest() {
-        User user = User.builder()
+        RequestsDto requestsDto = RequestsDto.builder()
                 .id(1L)
-                .name("name")
-                .email("user@gmail.com")
+                .description("description")
                 .build();
 
-        Optional<JsonContent<User>> result = Optional.of(json.write(user));
+        Optional<JsonContent<RequestsDto>> result = Optional.of(json.write(requestsDto));
 
         Assertions.assertThat(result)
                 .isPresent()
@@ -34,11 +35,8 @@ class UserToJsonTests {
                             .extractingJsonPathNumberValue("$.id")
                             .isEqualTo(1);
                     Assertions.assertThat(i)
-                            .extractingJsonPathStringValue("$.name")
-                            .isEqualTo("name");
-                    Assertions.assertThat(i)
-                            .extractingJsonPathStringValue("email")
-                            .isEqualTo("user@gmail.com");
+                            .extractingJsonPathStringValue("$.description")
+                            .isEqualTo("description");
                 });
     }
 }

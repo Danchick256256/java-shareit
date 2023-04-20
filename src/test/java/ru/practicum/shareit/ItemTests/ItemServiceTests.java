@@ -123,7 +123,6 @@ class ItemServiceTests {
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByTextTest() {
-        getByOwnerIdTest();
         List<ItemDto> items = itemService.searchItems("item");
 
         Assertions.assertThat(items)
@@ -136,7 +135,6 @@ class ItemServiceTests {
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void getAllByOwnerIdTest() {
-        getAllByTextTest();
         List<ItemDto> items = itemService.getAllItemsByOwnerId(1L);
 
         Assertions.assertThat(items)

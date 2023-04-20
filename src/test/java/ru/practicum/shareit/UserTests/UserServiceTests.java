@@ -32,7 +32,6 @@ class UserServiceTests {
     private final UserService userService;
 
     @Test
-    @Order(0)
     @Sql(value = { "/test-schema.sql" })
     void createTest() {
         UserDto userCreateDto = UserDto.builder()
@@ -53,7 +52,6 @@ class UserServiceTests {
     }
 
     @Test
-    @Order(1)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void updateTest() {
         UserDto userUpdate = UserDto.builder()
@@ -74,7 +72,6 @@ class UserServiceTests {
     }
 
     @Test
-    @Order(2)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void getByIdCorrectTest() {
         Optional<User> user = Optional.of(userService.getUserById(1L));
@@ -90,7 +87,6 @@ class UserServiceTests {
     }
 
     @Test
-    @Order(3)
     void getByIdUnCorrectTest() {
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(100L));
     }
@@ -108,7 +104,6 @@ class UserServiceTests {
     }
 
     @Test
-    @Order(5)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
     void deleteByIdTest() {
         userService.deleteUser(1L);

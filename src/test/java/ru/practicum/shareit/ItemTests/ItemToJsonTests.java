@@ -1,4 +1,4 @@
-package ru.practicum.shareit.UserTests;
+package ru.practicum.shareit.ItemTests;
 
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
@@ -7,25 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.requests.dto.RequestsDto;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @JsonTest
-class UserToJsonTests {
+public class ItemToJsonTests {
     @Autowired
-    private JacksonTester<User> json;
+    private JacksonTester<ItemDto> json;
 
     @Test
     @SneakyThrows
     void userDtoTest() {
-        User user = User.builder()
+        ItemDto itemDto = ItemDto.builder()
                 .id(1L)
                 .name("name")
-                .email("user@gmail.com")
+                .requestId(1L)
+                .comments(Collections.emptyList())
+                .ownerId(1L)
+                .description("description")
                 .build();
 
-        Optional<JsonContent<User>> result = Optional.of(json.write(user));
+        Optional<JsonContent<ItemDto>> result = Optional.of(json.write(itemDto));
 
         Assertions.assertThat(result)
                 .isPresent()
@@ -34,11 +39,17 @@ class UserToJsonTests {
                             .extractingJsonPathNumberValue("$.id")
                             .isEqualTo(1);
                     Assertions.assertThat(i)
+                            .extractingJsonPathStringValue("$.description")
+                            .isEqualTo("description");
+                    Assertions.assertThat(i)
                             .extractingJsonPathStringValue("$.name")
                             .isEqualTo("name");
                     Assertions.assertThat(i)
-                            .extractingJsonPathStringValue("email")
-                            .isEqualTo("user@gmail.com");
+                            .extractingJsonPathNumberValue("$.requestId")
+                            .isEqualTo(1);
+                    Assertions.assertThat(i)
+                            .extractingJsonPathNumberValue("$.ownerId")
+                            .isEqualTo(1);
                 });
     }
 }
