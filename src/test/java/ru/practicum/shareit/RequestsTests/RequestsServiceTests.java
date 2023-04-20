@@ -85,6 +85,18 @@ class RequestsServiceTests {
     @Test
     @Order(3)
     void getForOwnerTest() {
+        UserDto userCreateDto = UserDto.builder()
+                .name("user")
+                .email("11user@gmail.com")
+                .build();
+        userService.createUser(UserMapper.toUser(userCreateDto));
+
+        RequestsDto incomeDto = RequestsDto.builder()
+                .description("text")
+                .build();
+
+        requestService.createRequest(incomeDto, 1L);
+
         long userId = 1L;
 
         List<RequestsResponse> requestsResponseList = requestService.getRequestByOwnerId(userId);
@@ -106,9 +118,25 @@ class RequestsServiceTests {
     @Test
     @Order(4)
     void getAllTest() {
+        UserDto userCreateDto = UserDto.builder()
+                .name("user")
+                .email("11user@gmail.com")
+                .build();
+        userService.createUser(UserMapper.toUser(userCreateDto));
+        UserDto userCreateDtoSecond = UserDto.builder()
+                .name("user")
+                .email("111user@gmail.com")
+                .build();
+        userService.createUser(UserMapper.toUser(userCreateDtoSecond));
         long userId = 2L;
         int from = 0;
         int size = 10;
+
+        RequestsDto incomeDto = RequestsDto.builder()
+                .description("text")
+                .build();
+
+        requestService.createRequest(incomeDto, userId);
 
         List<RequestsResponse> requestsResponseList = requestService.getAllRequestsWithSize(userId, from, size);
 
