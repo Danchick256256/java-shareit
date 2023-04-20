@@ -36,7 +36,7 @@ class RequestsServiceTests {
     void createUsersTest() {
         UserDto userCreateDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("11user@gmail.com")
                 .build();
         userService.createUser(UserMapper.toUser(userCreateDto));
     }

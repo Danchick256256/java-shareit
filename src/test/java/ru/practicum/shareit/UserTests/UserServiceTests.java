@@ -35,7 +35,7 @@ class UserServiceTests {
     void createTest() {
         UserDto userCreateDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("22user@gmail.com")
                 .build();
         Optional<User> user = Optional.of(userService.createUser(UserMapper.toUser(userCreateDto)));
 
@@ -44,7 +44,7 @@ class UserServiceTests {
                 .hasValueSatisfying(f -> {
                             assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
                             assertThat(f).hasFieldOrPropertyWithValue("name", "user");
-                            assertThat(f).hasFieldOrPropertyWithValue("email", "user@gmail.com");
+                            assertThat(f).hasFieldOrPropertyWithValue("email", "22user@gmail.com");
                         }
                 );
     }

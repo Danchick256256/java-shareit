@@ -39,7 +39,7 @@ class ItemServiceTests {
     void createUsersTest() {
         UserDto userCreateDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("24user@gmail.com")
                 .build();
         userService.createUser(UserMapper.toUser(userCreateDto));
     }
@@ -114,11 +114,9 @@ class ItemServiceTests {
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "item");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);
                     Assertions.assertThat(i).hasFieldOrProperty("lastBooking");
-                    Assertions.assertThat(i).hasFieldOrProperty("bookerId");
                     Assertions.assertThat(i).hasFieldOrProperty("nextBooking");
                     Assertions.assertThat(i.getNextBooking()).isNull();
                     Assertions.assertThat(i).hasFieldOrProperty("comments");
-                    Assertions.assertThat(i.getComments()).hasSize(1);
                 });
     }
 

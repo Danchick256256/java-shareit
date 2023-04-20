@@ -59,12 +59,12 @@ class ControllerTests {
     void createUserTest() {
         UserDto userDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("12user@gmail.com")
                 .build();
         User user = User.builder()
                 .id(1L)
                 .name("user")
-                .email("user@gmail.com")
+                .email("12user@gmail.com")
                 .build();
 
         when(userService.createUser(any())).thenReturn(user);
@@ -111,12 +111,12 @@ class ControllerTests {
     void updateUserTest() {
         UserDto userInDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("23user@gmail.com")
                 .build();
         User user = User.builder()
                 .id(1L)
                 .name("userUpdated")
-                .email("user@gmail.com")
+                .email("23user@gmail.com")
                 .build();
 
         when(userService.updateUser(anyLong(), any())).thenReturn(user);
@@ -151,7 +151,7 @@ class ControllerTests {
     void createUserWithExistingEmailTest() {
         UserDto userInDto = UserDto.builder()
                 .name("user")
-                .email("user@gmail.com")
+                .email("24user@gmail.com")
                 .build();
 
         when(userService.createUser(any())).thenThrow(UserNotUniqueEmailException.class);

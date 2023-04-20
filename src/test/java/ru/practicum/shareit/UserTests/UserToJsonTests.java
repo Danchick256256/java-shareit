@@ -22,7 +22,7 @@ class UserToJsonTests {
         User user = User.builder()
                 .id(1L)
                 .name("name")
-                .email("user@gmail.com")
+                .email("1user@gmail.com")
                 .build();
 
         Optional<JsonContent<User>> result = Optional.of(json.write(user));
@@ -38,7 +38,7 @@ class UserToJsonTests {
                             .isEqualTo("name");
                     Assertions.assertThat(i)
                             .extractingJsonPathStringValue("email")
-                            .isEqualTo("user@gmail.com");
+                            .isEqualTo("1user@gmail.com");
                 });
     }
 }
