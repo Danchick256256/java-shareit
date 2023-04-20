@@ -14,9 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.practicum.shareit.requests.dto.RequestsDto;
 import ru.practicum.shareit.requests.dto.RequestsResponse;
 import ru.practicum.shareit.requests.service.RequestsService;
-import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.util.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
