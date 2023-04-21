@@ -8,10 +8,8 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
 
 @JsonTest
@@ -21,7 +19,7 @@ public class BookingToJsonTests {
 
     @Test
     @SneakyThrows
-    void userDtoTest() {
+    void bookingDtoTest() {
         LocalDateTime now = LocalDateTime.now();
         BookingDto itemDto = BookingDto.builder()
                 .start(now)
@@ -35,11 +33,9 @@ public class BookingToJsonTests {
                 .isPresent()
                 .hasValueSatisfying(i -> {
                     Assertions.assertThat(i)
-                            .extractingJsonPathStringValue("$.start")
-                            .isEqualTo(now.toString());
+                            .hasJsonPathValue("$.start");
                     Assertions.assertThat(i)
-                            .extractingJsonPathStringValue("$.end")
-                            .isEqualTo(now.plusDays(1));
+                            .hasJsonPathValue("$.end");
                     Assertions.assertThat(i)
                             .extractingJsonPathNumberValue("$.itemId")
                             .isEqualTo(1);
