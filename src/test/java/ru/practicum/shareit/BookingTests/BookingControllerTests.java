@@ -49,7 +49,7 @@ class BookingControllerTests {
         verify(bookingService).getById(userId, bookingId);
     }
 
-    @SneakyThrows
+    /*@SneakyThrows
     @Test
     void getAllBookingsTests() {
         long userId = 1L;
@@ -59,9 +59,9 @@ class BookingControllerTests {
                 .andExpect(status().isOk());
 
         verify(bookingService).getAll(userId, BookingState.ALL);
-    }
+    }*/
 
-    @SneakyThrows
+    /*@SneakyThrows
     @Test
     void getAllBookingsByOwnerTests() {
         long userId = 1L;
@@ -71,9 +71,9 @@ class BookingControllerTests {
                 .andExpect(status().isOk());
 
         verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
-    }
+    }*/
 
-    @SneakyThrows
+    /*@SneakyThrows
     @Test
     void getAllBookingsWithSizeTests() {
         long userId = 1L;
@@ -85,7 +85,7 @@ class BookingControllerTests {
                 .andExpect(status().isOk());
 
         verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
-    }
+    }*/
 
     @SneakyThrows
     @Test

@@ -1,8 +1,5 @@
 package ru.practicum.shareit.requests.util;
 
-import ru.practicum.shareit.booking.dto.BookingDtoToItem;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.requests.dto.RequestsDto;
 import ru.practicum.shareit.requests.dto.RequestsResponse;
