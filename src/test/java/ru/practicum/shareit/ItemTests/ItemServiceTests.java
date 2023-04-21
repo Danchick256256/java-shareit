@@ -158,7 +158,7 @@ class ItemServiceTests {
         Assertions.assertThat(itemDtoResponse)
                 .isPresent()
                 .hasValueSatisfying(i -> {
-                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 2L);
+                    Assertions.assertThat(i).hasFieldOrPropertyWithValue("id", 3L);
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("name", "item");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("description", "user 3 item");
                     Assertions.assertThat(i).hasFieldOrPropertyWithValue("available", true);
