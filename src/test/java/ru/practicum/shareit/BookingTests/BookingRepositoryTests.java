@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,11 +47,23 @@ public class BookingRepositoryTests {
         assertThat(existing).isTrue();
     }
 
-    /*@Test
-    void searchItems() {
-        List<Booking> bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(2L, BookingState.ALL);
+    @Test
+    void findByBookerIdAndStatus() {
+        List<Booking> bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(2L, BookingState.WAITING);
         assertThat(bookings).hasSize(1);
-    }*/
+    }
+
+    @Test
+    void findAllByItemOwnerAndStartAfterOrderByStart() {
+        List<Booking> bookings = bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(2L, LocalDateTime.now().minusYears(1));
+        assertThat(bookings).hasSize(1);
+    }
+
+    @Test
+    void findAllByBookerIdAndEndBeforeOrderByStart() {
+        List<Booking> bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(2L, LocalDateTime.now().plusYears(1));
+        assertThat(bookings).hasSize(1);
+    }
 
     @Test
     void findAllByOwnerId() {
