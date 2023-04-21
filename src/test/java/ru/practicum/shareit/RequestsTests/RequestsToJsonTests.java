@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.requests.dto.RequestsDto;
-import ru.practicum.shareit.requests.model.Requests;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.Optional;
 
