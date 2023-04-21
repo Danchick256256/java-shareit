@@ -33,7 +33,7 @@ public class RequestsServiceImplementation implements RequestsService {
         if (userService.getUserById(userId) == null) throw new UserNotFoundException(userId);
         if (requestsDto.getDescription() == null || requestsDto.getDescription().isBlank())
             throw new RequestsBadRequestException(userId);
-        Requests requests = requestsRepository.save(RequestMapper.dtoToItem(requestsDto, userId));
+        Requests requests = requestsRepository.save(RequestMapper.dtoToRequest(requestsDto, userId));
         List<Item> items = itemRepository.findAllByRequestOrderByIdAsc(requests.getId());
         return RequestMapper.requestToResponse(requests, items);
     }

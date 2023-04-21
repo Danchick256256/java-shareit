@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShareItTests.contextLoads Coverage Results</a> &gt; <a href="index.source.html" class="el_package">ru.practicum.shareit.user.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package ru.practicum.shareit.user.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.DTO.UserDto;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.util.UserMapper;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@RequestMapping(path = &quot;/users&quot;)
+@RequiredArgsConstructor
+<span class="fc" id="L18">@Slf4j</span>
+public class UserController {
+    private final UserService userService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List&lt;User&gt; getAllUsers() {
+<span class="nc" id="L25">        log.info(&quot;get all users request&quot;);</span>
+<span class="nc" id="L26">        return userService.getAllUsers();</span>
+    }
+
+    @GetMapping(&quot;{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public User getUserById(@PathVariable long id) {
+<span class="nc" id="L32">        log.info(&quot;get user by id request with id = {}&quot;, id);</span>
+<span class="nc" id="L33">        return userService.getUserById(id);</span>
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@Valid @RequestBody UserDto dto) {
+<span class="nc" id="L39">        log.info(&quot;create user request with data = {}&quot;, dto.toString());</span>
+<span class="nc" id="L40">        return userService.createUser(UserMapper.toUser(dto));</span>
+    }
+
+    @PatchMapping(&quot;{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@RequestBody UserDto dto, @PathVariable long id) {
+<span class="nc" id="L46">        log.info(&quot;update user by id request with id = {}, data = {}&quot;, id, dto.toString());</span>
+<span class="nc" id="L47">        return userService.updateUser(id, UserMapper.toUser(dto));</span>
+    }
+
+    @DeleteMapping(&quot;{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable long id) {
+<span class="nc" id="L53">        log.info(&quot;delete user by id request with id = {}&quot;, id);</span>
+<span class="nc" id="L54">        userService.deleteUser(id);</span>
+<span class="nc" id="L55">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -14,11 +14,11 @@ public interface BookingService {
 
     List<Booking> getAll(long ownerId, BookingState state);
 
-    List<Booking> getAllWithSize(long ownerId, BookingState state, Long from, Long size);
+    List<Booking> getAll(long ownerId, BookingState state, Long from, Long size);
 
     List<Booking> getAllByOwnerId(long ownerId, BookingState state);
 
-    List<Booking> getAllByOwnerIdWithSize(long ownerId, BookingState state, Long from, Long size);
+    List<Booking> getAllByOwnerId(long ownerId, BookingState state, Long from, Long size);
 
     BookingDtoResponse updateBooking(long ownerId, long bookingId, boolean approvedStatus);
 }

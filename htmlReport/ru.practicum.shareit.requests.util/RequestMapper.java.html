@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RequestMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ShareItTests.contextLoads Coverage Results</a> &gt; <a href="index.source.html" class="el_package">ru.practicum.shareit.requests.util</a> &gt; <span class="el_source">RequestMapper.java</span></div><h1>RequestMapper.java</h1><pre class="source lang-java linenums">package ru.practicum.shareit.requests.util;
+
+import ru.practicum.shareit.booking.dto.BookingDtoToItem;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.requests.dto.RequestsDto;
+import ru.practicum.shareit.requests.dto.RequestsResponse;
+import ru.practicum.shareit.requests.model.Requests;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+<span class="nc" id="L14">public class RequestMapper {</span>
+    public static Requests dtoToItem(RequestsDto requestsDto, long ownerId) {
+<span class="nc" id="L16">        return Requests.builder()</span>
+<span class="nc" id="L17">                .owner(ownerId)</span>
+<span class="nc" id="L18">                .description(requestsDto.getDescription())</span>
+<span class="nc" id="L19">                .creationDate(LocalDateTime.now())</span>
+<span class="nc" id="L20">                .build();</span>
+    }
+
+    public static ItemDto itemToDto(Item item, BookingDtoToItem lastBooking, BookingDtoToItem nextBooking, List&lt;CommentDto&gt; commentDtoList) {
+<span class="nc" id="L24">        return ItemDto.builder()</span>
+<span class="nc" id="L25">                .id(item.getId())</span>
+<span class="nc" id="L26">                .ownerId(item.getOwner())</span>
+<span class="nc" id="L27">                .name(item.getName())</span>
+<span class="nc" id="L28">                .description(item.getDescription())</span>
+<span class="nc" id="L29">                .available(item.isAvailable())</span>
+<span class="nc" id="L30">                .lastBooking(lastBooking)</span>
+<span class="nc" id="L31">                .nextBooking(nextBooking)</span>
+<span class="nc" id="L32">                .comments(commentDtoList)</span>
+<span class="nc" id="L33">                .build();</span>
+    }
+
+    public static RequestsResponse requestToResponse(Requests requests, List&lt;Item&gt; items) {
+<span class="nc" id="L37">        return RequestsResponse.builder()</span>
+<span class="nc" id="L38">                .id(requests.getId())</span>
+<span class="nc" id="L39">                .creationDate(requests.getCreationDate())</span>
+<span class="nc" id="L40">                .description(requests.getDescription())</span>
+<span class="nc" id="L41">                .owner(requests.getOwner())</span>
+<span class="nc" id="L42">                .items(items)</span>
+<span class="nc" id="L43">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

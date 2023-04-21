@@ -75,6 +75,20 @@ class BookingControllerTests {
 
     @SneakyThrows
     @Test
+    void getAllBookingsWithSizeTests() {
+        long userId = 1L;
+        long from = 0;
+        long size = 10;
+        mockMvc.perform(get("/bookings?from={from}&size={size}", from, size)
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
+    }
+
+    @SneakyThrows
+    @Test
     void updateBookingsFromOwner() {
         long userId = 1L;
         long bookingId = 1L;

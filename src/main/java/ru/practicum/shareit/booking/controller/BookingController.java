@@ -32,11 +32,7 @@ public class BookingController {
                                                 @RequestParam(value = "from", defaultValue = "-256") Long from,
                                                 @RequestParam(value = "size", defaultValue = "-256") Long size) {
         log.info("get.all.bookings.request");
-        if (from == -256 || size == -256) {
-            return bookingService.getAll(ownerId, state);
-        } else {
-            return bookingService.getAllWithSize(ownerId, state, from, size);
-        }
+        return bookingService.getAll(ownerId, state, from, size);
     }
 
     @GetMapping("/owner")
@@ -45,11 +41,7 @@ public class BookingController {
                                                          @RequestParam(value = "from", defaultValue = "-256") Long from,
                                                          @RequestParam(value = "size", defaultValue = "-256") Long size) {
         log.info("get.all.bookings.request");
-        if (from == -256 || size == -256) {
-            return bookingService.getAllByOwnerId(ownerId, state);
-        } else {
-            return bookingService.getAllByOwnerIdWithSize(ownerId, state, from, size);
-        }
+        return bookingService.getAllByOwnerId(ownerId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")

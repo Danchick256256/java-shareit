@@ -90,7 +90,8 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllWithSize(long bookerId, BookingState state, Long from, Long size) {
+    public List<Booking> getAll(long bookerId, BookingState state, Long from, Long size) {
+        if (from == -256L && size == -256L) return getAll(bookerId, state);
         if (from == 0 && size == 0) throw new BookingBadRequestException(bookerId);
         if (from < 0 && size < 0) throw new BookingBadRequestException(bookerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
@@ -165,7 +166,8 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllByOwnerIdWithSize(long ownerId, BookingState state, Long from, Long size) {
+    public List<Booking> getAllByOwnerId(long ownerId, BookingState state, Long from, Long size) {
+        if (from == -256L && size == -256L) return getAllByOwnerId(ownerId, state);
         if (from == 0 && size == 0) throw new BookingBadRequestException(ownerId);
         if (from < 0 && size < 0) throw new BookingBadRequestException(ownerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());

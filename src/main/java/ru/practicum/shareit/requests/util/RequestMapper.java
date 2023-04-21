@@ -12,24 +12,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RequestMapper {
-    public static Requests dtoToItem(RequestsDto requestsDto, long ownerId) {
+    public static Requests dtoToRequest(RequestsDto requestsDto, long ownerId) {
         return Requests.builder()
                 .owner(ownerId)
                 .description(requestsDto.getDescription())
                 .creationDate(LocalDateTime.now())
-                .build();
-    }
-
-    public static ItemDto itemToDto(Item item, BookingDtoToItem lastBooking, BookingDtoToItem nextBooking, List<CommentDto> commentDtoList) {
-        return ItemDto.builder()
-                .id(item.getId())
-                .ownerId(item.getOwner())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.isAvailable())
-                .lastBooking(lastBooking)
-                .nextBooking(nextBooking)
-                .comments(commentDtoList)
                 .build();
     }
 
