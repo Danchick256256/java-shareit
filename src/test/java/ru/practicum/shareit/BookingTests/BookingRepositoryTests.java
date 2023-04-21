@@ -66,6 +66,18 @@ public class BookingRepositoryTests {
     }
 
     @Test
+    void findAllByItemOwnerAndStatusOrderByStartAsc() {
+        List<Booking> bookings = bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(2L, BookingState.WAITING);
+        assertThat(bookings).hasSize(1);
+    }
+
+    @Test
+    void findAllByBookerIdOrderByStartDesc() {
+        List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(2L);
+        assertThat(bookings).hasSize(1);
+    }
+
+    @Test
     void findAllByOwnerId() {
         List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerId(1L, 1L);
         assertThat(bookings).hasSize(1);
