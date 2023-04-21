@@ -3,7 +3,6 @@ package ru.practicum.shareit.ItemTests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,19 +10,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.controller.ItemController;
-import ru.practicum.shareit.requests.controller.RequestsController;
-import ru.practicum.shareit.requests.dto.RequestsDto;
-import ru.practicum.shareit.requests.dto.RequestsResponse;
-import ru.practicum.shareit.requests.service.RequestsService;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.service.ItemService;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,72 +27,63 @@ class ItemControllerTests {
     private final ObjectMapper objectMapper;
     private final MockMvc mockMvc;
     @MockBean
-    RequestsService requestService;
+    ItemService itemService;
 
     @SneakyThrows
     @Test
-    void getRequestsById() {
+    void createItemTest() {
         long userId = 1L;
-        long requestId = 1L;
-        mockMvc.perform(get("/requests/{requestId}", requestId)
-                        .header("X-Sharer-User-Id", userId))
+        ItemDto itemDto = ItemDto.builder()
+                .name("item")
+                .description("description")
+                .available(false)
+                .build();
+        mockMvc.perform(post("/items")
+                        .header("X-Sharer-User-Id", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(requestService).getRequestById(requestId, userId);
+        verify(itemService).createItem(userId, itemDto);
     }
 
     @SneakyThrows
     @Test
     void getAllRequestsTests() {
         long userId = 1L;
-        mockMvc.perform(get("/requests/all")
+        mockMvc.perform(get("/items")
                         .header("X-Sharer-User-Id", userId))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(requestService).getAllRequests(userId);
+        verify(itemService).getAllItemsByOwnerId(userId);
     }
 
     @SneakyThrows
     @Test
-    void getAllRequestsFromOwner() {
+    void getAllItemsFromOwner() {
         long userId = 1L;
-        mockMvc.perform(get("/requests")
+        mockMvc.perform(get("/items")
                         .header("X-Sharer-User-Id", userId))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(requestService).getRequestByOwnerId(userId);
+        verify(itemService).getAllItemsByOwnerId(userId);
     }
 
     @SneakyThrows
     @Test
-    void createRequestTest() {
+    void getItemByIdTests() {
         long userId = 1L;
-        RequestsDto incomeDto = RequestsDto.builder()
-                .description("text")
-                .build();
-        RequestsResponse requestsResponse = RequestsResponse.builder()
-                .id(1L)
-                .owner(1L)
-                .creationDate(LocalDateTime.now())
-                .items(Collections.emptyList())
-                .description("text")
-                .build();
+        mockMvc.perform(get("/items/{itemId}", 1L)
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
 
-        when(requestService.createRequest(any(), anyLong())).thenReturn(requestsResponse);
-        String content = mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(incomeDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        verify(itemService).getItemById(1L, userId);
 
-        Assertions.assertEquals(objectMapper.writeValueAsString(requestsResponse), content);
     }
 }
