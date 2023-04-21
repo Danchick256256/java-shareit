@@ -36,10 +36,10 @@ public class BookingToJsonTests {
                 .hasValueSatisfying(i -> {
                     Assertions.assertThat(i)
                             .extractingJsonPathStringValue("$.start")
-                            .isEqualTo(now.toString().substring(0, now.toString().length() - 2));
+                            .isEqualTo(now.toString());
                     Assertions.assertThat(i)
                             .extractingJsonPathStringValue("$.end")
-                            .isEqualTo(now.plusDays(1).toString().substring(0, now.toString().length() - 2));
+                            .isEqualTo(now.plusDays(1));
                     Assertions.assertThat(i)
                             .extractingJsonPathNumberValue("$.itemId")
                             .isEqualTo(1);
