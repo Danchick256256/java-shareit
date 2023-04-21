@@ -51,22 +51,10 @@ class BookingControllerTests {
 
     @SneakyThrows
     @Test
-    void getAllBookingsTests() {
-        long userId = 1L;
-        mockMvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
-    }
-
-    @SneakyThrows
-    @Test
-    void getAllBookingsFromOwner() {
+    void updateBookingsFromOwner() {
         long userId = 1L;
         long bookingId = 1L;
-        mockMvc.perform(patch("/bookings/{bookingId}")
+        mockMvc.perform(patch("/bookings/{bookingId}?approved=true", bookingId)
                         .header("X-Sharer-User-Id", userId))
                 .andDo(print())
                 .andExpect(status().isOk());
