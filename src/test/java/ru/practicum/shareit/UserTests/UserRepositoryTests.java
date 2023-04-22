@@ -22,7 +22,7 @@ public class UserRepositoryTests {
     @Test
     void findAll() {
         List<User> users = userRepository.findAll();
-        Assertions.assertThat(users).hasSize(2);
+        Assertions.assertThat(users).hasSize(3);
     }
 
     @Test

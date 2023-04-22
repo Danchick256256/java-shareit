@@ -90,7 +90,7 @@ class UserServiceTests {
         List<User> users = userService.getAllUsers();
 
         assertThat(users)
-                .hasSize(2)
+                .hasSize(3)
                 .map(User::getId)
                 .contains(1L, 2L);
     }
@@ -151,7 +151,7 @@ class UserServiceTests {
         List<User> users = userService.getAllUsers();
 
         assertThat(users)
-                .hasSize(1)
+                .hasSize(2)
                 .map(User::getId)
                 .contains(2L);
     }
