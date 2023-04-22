@@ -100,7 +100,7 @@ class BookingServiceTests {
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAll() {
-        List<Booking> items = bookingService.getAll(1L, BookingState.WAITING);
+        List<Booking> items = bookingService.getAll(1L, BookingState.WAITING, 0L, 10L);
 
         Assertions.assertThat(items)
                 .hasSize(1);
@@ -112,7 +112,7 @@ class BookingServiceTests {
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAllByOwnerId() {
-        List<Booking> items = bookingService.getAllByOwnerId(1L, BookingState.WAITING);
+        List<Booking> items = bookingService.getAllByOwnerId(1L, BookingState.WAITING, 0L, 10L);
 
         Assertions.assertThat(items)
                 .hasSize(1);

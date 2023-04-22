@@ -29,8 +29,8 @@ public class BookingController {
     @GetMapping
     public List<Booking> getAllBookingsWithSize(@RequestHeader(Constants.userHeader) int ownerId,
                                                 @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
-                                                @RequestParam(value = "from", defaultValue = "-256") Long from,
-                                                @RequestParam(value = "size", defaultValue = "-256") Long size) {
+                                                @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                @RequestParam(value = "size", defaultValue = "10") Long size) {
         log.info("get.all.bookings.request");
         return bookingService.getAll(ownerId, state, from, size);
     }
@@ -38,8 +38,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<Booking> getAllBookingsByOwnerIdWithSize(@RequestHeader(Constants.userHeader) int ownerId,
                                                          @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
-                                                         @RequestParam(value = "from", defaultValue = "-256") Long from,
-                                                         @RequestParam(value = "size", defaultValue = "-256") Long size) {
+                                                         @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                         @RequestParam(value = "size", defaultValue = "10") Long size) {
         log.info("get.all.bookings.request");
         return bookingService.getAllByOwnerId(ownerId, state, from, size);
     }

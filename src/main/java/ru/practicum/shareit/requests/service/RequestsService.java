@@ -12,14 +12,9 @@ public interface RequestsService {
 
     List<RequestsResponse> getRequestsByOwnerId(long userId);
 
-    List<RequestsResponse> getRequestsByOwnerIdWithSize(long userId, long from, long size);
-
     RequestsResponse getRequestById(long id, long userId);
 
     void deleteRequest(long id);
 
-    List<RequestsResponse> getAllRequests(long userId);
-
-    List<RequestsResponse> getAllRequestsWithSize(long userId, long from, long size);
-
+    List<RequestsResponse> getAllRequests(long userId, long from, long size);
 }

@@ -20,6 +20,7 @@ public class RequestsController {
 
     @PostMapping
     public RequestsResponse createRequest(@RequestHeader(Constants.userHeader) int ownerId, @RequestBody RequestsDto requestsDto) {
+        log.info(requestsDto.toString());
         return requestsService.createRequest(requestsDto, ownerId);
     }
 
@@ -30,14 +31,9 @@ public class RequestsController {
 
     @GetMapping("/all")
     public List<RequestsResponse> getAllRequest(@RequestHeader(Constants.userHeader) int ownerId,
-                                                @RequestParam(value = "from", defaultValue = "-256") Long from,
-                                                @RequestParam(value = "size", defaultValue = "-256") Long size) {
-        if (from == -256 || size == -256) {
-            return requestsService.getAllRequests(ownerId);
-        } else {
-            return requestsService.getAllRequestsWithSize(ownerId, from, size);
-        }
-
+                                                @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                @RequestParam(value = "size", defaultValue = "10") Long size) {
+        return requestsService.getAllRequests(ownerId, from, size);
     }
 
     @GetMapping("{requestId}")

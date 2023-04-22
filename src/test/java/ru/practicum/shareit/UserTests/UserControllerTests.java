@@ -3,7 +3,6 @@ package ru.practicum.shareit.UserTests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.exception.UserNotUniqueEmailException;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.util.UserMapper;
 
 import java.nio.charset.StandardCharsets;
 
@@ -34,18 +33,7 @@ class UserControllerTests {
 
     @SneakyThrows
     @Test
-    void getByIdTest() {
-        long userId = 1L;
-        mockMvc.perform(get("/users/{userId}", userId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(userService).getUserById(userId);
-    }
-
-    @SneakyThrows
-    @Test
-    void getAllTest() {
+    void getAllUsersTest() {
         long userId = 1L;
         mockMvc.perform(get("/users", userId))
                 .andDo(print())
@@ -56,31 +44,34 @@ class UserControllerTests {
 
     @SneakyThrows
     @Test
+    void getUserByIdTest() {
+        long userId = 1L;
+        mockMvc.perform(get("/users/{userId}", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(userService).getUserById(userId);
+    }
+
+    @SneakyThrows
+    @Test
     void createUserTest() {
         UserDto userDto = UserDto.builder()
                 .name("user")
                 .email("12user@gmail.com")
                 .build();
-        User user = User.builder()
-                .id(1L)
-                .name("user")
-                .email("12user@gmail.com")
-                .build();
 
-        when(userService.createUser(any())).thenReturn(user);
-        String result = mockMvc.perform(
+        mockMvc.perform(
                         post("/users")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(userDto))
                                 .characterEncoding(StandardCharsets.UTF_8)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andDo(print())
+                .andExpect(status().isCreated());
 
-        Assertions.assertEquals(objectMapper.writeValueAsString(user), result);
+        verify(userService).createUser(UserMapper.toUser(userDto));
     }
 
     @SneakyThrows
@@ -103,7 +94,7 @@ class UserControllerTests {
                 .getResponse()
                 .getContentAsString();
 
-        verify(userService, never()).createUser(any());
+        verify(userService, never()).createUser(UserMapper.toUser(userIncomeDto));
     }
 
     @SneakyThrows
@@ -113,14 +104,8 @@ class UserControllerTests {
                 .name("user")
                 .email("23user@gmail.com")
                 .build();
-        User user = User.builder()
-                .id(1L)
-                .name("userUpdated")
-                .email("23user@gmail.com")
-                .build();
 
-        when(userService.updateUser(anyLong(), any())).thenReturn(user);
-        String result = mockMvc.perform(
+        mockMvc.perform(
                         patch("/users/{userId}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(userInDto))
@@ -132,7 +117,7 @@ class UserControllerTests {
                 .getResponse()
                 .getContentAsString();
 
-        Assertions.assertEquals(objectMapper.writeValueAsString(user), result);
+        verify(userService).updateUser(1L, UserMapper.toUser(userInDto));
     }
 
     @SneakyThrows

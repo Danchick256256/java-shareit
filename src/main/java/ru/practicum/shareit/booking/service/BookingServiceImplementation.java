@@ -59,39 +59,7 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public List<Booking> getAll(long bookerId, BookingState state) {
-        if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
-        userRepository.findById(bookerId).orElseThrow(()
-                -> new UserNotFoundException(bookerId));
-        LocalDateTime now = LocalDateTime.now();
-        List<Booking> bookingList;
-        switch (state) {
-            case ALL:
-                bookingList = bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId);
-                return bookingList;
-            case WAITING:
-                bookingList = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.WAITING);
-                return bookingList;
-            case REJECTED:
-                bookingList = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.REJECTED);
-                return bookingList;
-            case FUTURE:
-                bookingList = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(bookerId, now);
-                return bookingList;
-            case CURRENT:
-                bookingList = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, now, now);
-                return bookingList;
-            case PAST:
-                bookingList = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(bookerId, now);
-                return bookingList;
-            default:
-                throw new BookingNotFoundException(state);
-        }
-    }
-
-    @Override
     public List<Booking> getAll(long bookerId, BookingState state, Long from, Long size) {
-        if (from == -256L && size == -256L) return getAll(bookerId, state);
         if (from == 0 && size == 0) throw new BookingBadRequestException(bookerId);
         if (from < 0 && size < 0) throw new BookingBadRequestException(bookerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
@@ -142,32 +110,7 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllByOwnerId(long ownerId, BookingState state) {
-        if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
-        userRepository.findById(ownerId).orElseThrow(()
-                -> new UserNotFoundException(ownerId));
-        LocalDateTime now = LocalDateTime.now();
-        switch (state) {
-            case ALL:
-                return bookingRepository.findAllByItemOwnerOrderByStartDesc(ownerId);
-            case WAITING:
-                return bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.WAITING);
-            case REJECTED:
-                return bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.REJECTED);
-            case FUTURE:
-                return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(ownerId, now);
-            case CURRENT:
-                return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartAsc(ownerId, now, now);
-            case PAST:
-                return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(ownerId, now);
-            default:
-                throw new BookingNotFoundException(state);
-        }
-    }
-
-    @Override
     public List<Booking> getAllByOwnerId(long ownerId, BookingState state, Long from, Long size) {
-        if (from == -256L && size == -256L) return getAllByOwnerId(ownerId, state);
         if (from == 0 && size == 0) throw new BookingBadRequestException(ownerId);
         if (from < 0 && size < 0) throw new BookingBadRequestException(ownerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());

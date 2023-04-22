@@ -2,7 +2,10 @@ package ru.practicum.shareit.UserTests;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.practicum.shareit.user.DTO.UserDto;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.exception.UserNotUniqueEmailException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImplementation;
 import ru.practicum.shareit.user.util.UserMapper;
 
@@ -27,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 class UserServiceTests {
-    private final UserService userService;
+    private final UserServiceImplementation userService;
 
     @Test
     @Sql(value = { "/test-schema.sql" })
@@ -47,6 +50,49 @@ class UserServiceTests {
                             assertThat(f).hasFieldOrPropertyWithValue("email", "user@gmail.com");
                         }
                 );
+    }
+
+    @Test
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
+    void createUserWithExistingEmailTest() {
+        UserDto userCreateDto = UserDto.builder()
+                .name("user")
+                .email("user@gmail.com")
+                .build();
+
+        assertThrows(UserNotUniqueEmailException.class, () -> userService.createUser(UserMapper.toUser(userCreateDto)));
+    }
+
+    @Test
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
+    void getByIdTest() {
+        Optional<User> user = Optional.of(userService.getUserById(1L));
+
+        assertThat(user)
+                .isPresent()
+                .hasValueSatisfying(f -> {
+                            assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
+                            assertThat(f).hasFieldOrPropertyWithValue("name", "user");
+                            assertThat(f).hasFieldOrPropertyWithValue("email", "user@gmail.com");
+                        }
+                );
+    }
+
+    @Test
+    void getByWrongIdTest() {
+        assertThrows(UserNotFoundException.class, () -> userService.getUserById(100L));
+    }
+
+    @Test
+    @Order(4)
+    @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
+    void getAllTest() {
+        List<User> users = userService.getAllUsers();
+
+        assertThat(users)
+                .hasSize(2)
+                .map(User::getId)
+                .contains(1L, 2L);
     }
 
     @Test
@@ -71,10 +117,13 @@ class UserServiceTests {
 
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
-    void getByIdCorrectTest() {
-        Optional<User> user = Optional.of(userService.getUserById(1L));
+    void updateMissingNameAndEmailTest() {
+        UserDto userUpdate = UserDto.builder()
+                .build();
 
-        assertThat(user)
+        Optional<User> userDto = Optional.of(userService.updateUser(1L, UserMapper.toUser(userUpdate)));
+
+        assertThat(userDto)
                 .isPresent()
                 .hasValueSatisfying(f -> {
                             assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
@@ -85,20 +134,14 @@ class UserServiceTests {
     }
 
     @Test
-    void getByIdUnCorrectTest() {
-        assertThrows(UserNotFoundException.class, () -> userService.getUserById(100L));
-    }
-
-    @Test
-    @Order(4)
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql" })
-    void getAllTest() {
-        List<User> users = userService.getAllUsers();
+    void updateExistingEmailTest() {
+        UserDto userUpdate = UserDto.builder()
+                .name("userName")
+                .email("secondUser@gmail.com")
+                .build();
 
-        assertThat(users)
-                .hasSize(2)
-                .map(User::getId)
-                .contains(1L, 2L);
+        assertThrows(UserNotUniqueEmailException.class, () -> userService.updateUser(1L, UserMapper.toUser(userUpdate)));
     }
 
     @Test

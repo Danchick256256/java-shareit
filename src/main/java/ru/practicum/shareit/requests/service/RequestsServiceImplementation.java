@@ -58,14 +58,6 @@ public class RequestsServiceImplementation implements RequestsService {
 
     @Override
     public List<RequestsResponse> getRequestsByOwnerId(long userId) {
-        List<RequestsResponse> responses = requestsRepository.findAllByOwner(userId).stream().map(requests -> {
-            if (requests.getOwner() != userId) {
-                List<Item> items = itemRepository.findAllByRequestOrderByIdAsc(requests.getId());
-                return RequestMapper.requestToResponse(requests, items);
-            } else {
-                return null;
-            }
-        }).collect(Collectors.toList());
         return requestsRepository.findAllByOwner(userId).stream().filter(requests -> requests.getOwner() != userId).map(requests -> {
             List<Item> items = itemRepository.findAllByRequestOrderByIdAsc(requests.getId());
             return RequestMapper.requestToResponse(requests, items);
@@ -73,26 +65,7 @@ public class RequestsServiceImplementation implements RequestsService {
     }
 
     @Override
-    public List<RequestsResponse> getRequestsByOwnerIdWithSize(long userId, long from, long size) {
-        if (from == 0 && size == 0) throw new RequestsBadRequestException(userId);
-        if (from < 0 && size < 0) throw new RequestsBadRequestException(userId);
-        List<RequestsResponse> requestsList = requestsRepository.findAllByOwner(userId).stream().filter(requests -> requests.getOwner() != userId).map(requests -> {
-            List<Item> items = itemRepository.findAllByRequestOrderByIdAsc(requests.getId());
-            return RequestMapper.requestToResponse(requests, items);
-        }).collect(Collectors.toList());
-        return requestsList.subList((int) (from), (int) (from + size > requestsList.size() ? requestsList.size() : from + size));
-    }
-
-    @Override
-    public List<RequestsResponse> getAllRequests(long userId) {
-        return requestsRepository.findAll().stream().filter(requests -> requests.getOwner() != userId).map(requests -> {
-            List<Item> items = itemRepository.findAllByRequestOrderByIdAsc(requests.getId());
-            return RequestMapper.requestToResponse(requests, items);
-        }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<RequestsResponse> getAllRequestsWithSize(long userId, long from, long size) {
+    public List<RequestsResponse> getAllRequests(long userId, long from, long size) {
         if (from == 0 && size == 0) throw new RequestsBadRequestException(userId);
         if (from < 0 && size < 0) throw new RequestsBadRequestException(userId);
         List<RequestsResponse> requestsList = requestsRepository.findAll().stream().filter(requests -> requests.getOwner() != userId).map(requests -> {

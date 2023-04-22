@@ -38,6 +38,88 @@ class BookingControllerTests {
 
     @SneakyThrows
     @Test
+    void createBookingTest() {
+        long userId = 1L;
+        LocalDateTime now = LocalDateTime.now();
+        BookingDto bookingDto = BookingDto.builder()
+                .start(now)
+                .end(now.plusDays(1))
+                .itemId(1L)
+                .build();
+
+        Booking booking = Booking.builder()
+                .id(1L)
+                .status(BookingState.WAITING)
+                .start(now)
+                .end(now.plusDays(1))
+                .item(Item.builder().id(1L).build())
+                .build();
+
+        when(bookingService.createBooking(anyLong(), any())).thenReturn(booking);
+        String content = mockMvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(booking), content);
+    }
+
+    @SneakyThrows
+    @Test
+    void getAllBookingsTests() {
+        long userId = 1L;
+        mockMvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookingService).getAll(userId, BookingState.ALL, 0L, 10L);
+    }
+
+    @SneakyThrows
+    @Test
+    void getAllBookingsWithSizeTests() {
+        long userId = 1L;
+        mockMvc.perform(get("/bookings?from=1&size=10")
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookingService).getAll(userId, BookingState.ALL, 1L, 10L);
+    }
+
+    @SneakyThrows
+    @Test
+    void getAllBookingsByOwnerTests() {
+        long userId = 1L;
+        mockMvc.perform(get("/bookings/owner")
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL, 0L, 10L);
+    }
+
+    @SneakyThrows
+    @Test
+    void getAllBookingsByOwnerWithSizeTests() {
+        long userId = 1L;
+        mockMvc.perform(get("/bookings/owner?from=1&size=10")
+                        .header("X-Sharer-User-Id", userId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL, 1L, 10L);
+    }
+
+    @SneakyThrows
+    @Test
     void getBookingById() {
         long userId = 1L;
         long bookingId = 1L;
@@ -48,44 +130,6 @@ class BookingControllerTests {
 
         verify(bookingService).getById(userId, bookingId);
     }
-
-    /*@SneakyThrows
-    @Test
-    void getAllBookingsTests() {
-        long userId = 1L;
-        mockMvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(bookingService).getAll(userId, BookingState.ALL);
-    }*/
-
-    /*@SneakyThrows
-    @Test
-    void getAllBookingsByOwnerTests() {
-        long userId = 1L;
-        mockMvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
-    }*/
-
-    /*@SneakyThrows
-    @Test
-    void getAllBookingsWithSizeTests() {
-        long userId = 1L;
-        long from = 0;
-        long size = 10;
-        mockMvc.perform(get("/bookings?from={from}&size={size}", from, size)
-                        .header("X-Sharer-User-Id", userId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(bookingService).getAllByOwnerId(userId, BookingState.ALL);
-    }*/
 
     @SneakyThrows
     @Test
@@ -98,39 +142,5 @@ class BookingControllerTests {
                 .andExpect(status().isOk());
 
         verify(bookingService).updateBooking(userId, bookingId, true);
-    }
-
-    @SneakyThrows
-    @Test
-    void createBookingTest() {
-        long userId = 1L;
-        LocalDateTime now = LocalDateTime.now();
-        BookingDto bookingDto = BookingDto.builder()
-                .start(now)
-                .end(now.plusDays(1))
-                .itemId(1L)
-                .build();
-
-        Booking bookingDtoResponse = Booking.builder()
-                .id(1L)
-                .status(BookingState.WAITING)
-                .start(now)
-                .end(now.plusDays(1))
-                .item(Item.builder().id(1L).build())
-                .build();
-
-        when(bookingService.createBooking(anyLong(), any())).thenReturn(bookingDtoResponse);
-        String content = mockMvc.perform(post("/bookings")
-                        .header("X-Sharer-User-Id", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        Assertions.assertEquals(objectMapper.writeValueAsString(bookingDtoResponse), content);
     }
 }

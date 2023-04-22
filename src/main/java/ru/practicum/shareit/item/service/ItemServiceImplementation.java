@@ -40,6 +40,9 @@ public class ItemServiceImplementation implements ItemService {
     public CommentDto createComment(CommentDto dto, long authorId, long itemId) {
         bookingRepository.findAllByItemIdAndBookerId(itemId, authorId)
                 .stream()
+                .peek(i -> {
+                    log.info(i.toString());
+                })
                 .filter(booking -> booking.getStatus() == BookingState.APPROVED && booking.getStart().isBefore(LocalDateTime.now()))
                 .findAny().orElseThrow(() -> new ItemBadRequestException(itemId));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
