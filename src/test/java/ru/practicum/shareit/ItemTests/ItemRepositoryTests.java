@@ -22,7 +22,7 @@ public class ItemRepositoryTests {
     @Test
     void findAll() {
         List<Item> items = itemRepository.findAll();
-        Assertions.assertThat(items).hasSize(2);
+        Assertions.assertThat(items).hasSize(3);
     }
 
     @Test

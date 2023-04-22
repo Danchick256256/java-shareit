@@ -80,6 +80,6 @@ public class BookingRepositoryTests {
     @Test
     void findAllByOwnerId() {
         List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerId(1L, 1L);
-        assertThat(bookings).hasSize(1);
+        assertThat(bookings).hasSize(2);
     }
 }
