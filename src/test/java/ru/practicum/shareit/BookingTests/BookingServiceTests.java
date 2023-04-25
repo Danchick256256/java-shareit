@@ -101,10 +101,11 @@ class BookingServiceTests {
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void createBookingStartEqualsEndNowTest() {
+        LocalDateTime now = LocalDateTime.now();
         BookingDto bookingDto = BookingDto.builder()
                 .itemId(1L)
-                .start(LocalDateTime.now().plusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
+                .start(now)
+                .end(now)
                 .build();
 
         assertThrows(BookingBadRequestException.class, () -> bookingService.createBooking(2L, bookingDto));
