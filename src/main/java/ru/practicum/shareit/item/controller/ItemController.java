@@ -43,12 +43,6 @@ public class ItemController {
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
-    @DeleteMapping
-    public void removeItem(@RequestHeader(Constants.userHeader) int ownerId, @RequestBody int itemId) {
-        log.info("delete item by owner id = {}, item id = {}", ownerId, itemId);
-        itemService.removeItem(ownerId, itemId);
-    }
-
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text) {
         log.info("search item by text = {}", text);

@@ -27,17 +27,21 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<Booking> getAllBookings(@RequestHeader(Constants.userHeader) int ownerId,
-                                        @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
+    public List<Booking> getAllBookingsWithSize(@RequestHeader(Constants.userHeader) int ownerId,
+                                                @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
+                                                @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                @RequestParam(value = "size", defaultValue = "10") Long size) {
         log.info("get.all.bookings.request");
-        return bookingService.getAll(ownerId, state);
+        return bookingService.getAll(ownerId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<Booking> getAllBookingsByOwnerId(@RequestHeader(Constants.userHeader) int ownerId,
-                                                 @RequestParam(value = "state", defaultValue = "ALL") BookingState state) {
+    public List<Booking> getAllBookingsByOwnerIdWithSize(@RequestHeader(Constants.userHeader) int ownerId,
+                                                         @RequestParam(value = "state", defaultValue = "ALL") BookingState state,
+                                                         @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                         @RequestParam(value = "size", defaultValue = "10") Long size) {
         log.info("get.all.bookings.request");
-        return bookingService.getAllBookingsByOwnerId(ownerId, state);
+        return bookingService.getAllByOwnerId(ownerId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")

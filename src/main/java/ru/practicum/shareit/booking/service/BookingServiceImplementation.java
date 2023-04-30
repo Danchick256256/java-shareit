@@ -59,48 +59,66 @@ public class BookingServiceImplementation implements BookingService {
     }
 
     @Override
-    public List<Booking> getAll(long bookerId, BookingState state) {
+    public List<Booking> getAll(long bookerId, BookingState state, Long from, Long size) {
+        if (from == 0 && size == 0) throw new BookingBadRequestException(bookerId);
+        if (from < 0 && size < 0) throw new BookingBadRequestException(bookerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
         userRepository.findById(bookerId).orElseThrow(()
                 -> new UserNotFoundException(bookerId));
         LocalDateTime now = LocalDateTime.now();
+        List<Booking> bookingList;
         switch (state) {
             case ALL:
-                return bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId);
+                bookingList = bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case WAITING:
-                return bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.WAITING);
+                bookingList = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.WAITING);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case REJECTED:
-                return bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.REJECTED);
+                bookingList = bookingRepository.findAllByBookerIdAndStatusOrderByStartAsc(bookerId, BookingState.REJECTED);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case FUTURE:
-                return bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(bookerId, now);
+                bookingList = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(bookerId, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case CURRENT:
-                return bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, now, now);
+                bookingList = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, now, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case PAST:
-                return bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(bookerId, now);
+                bookingList = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(bookerId, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             default:
                 throw new BookingNotFoundException(state);
         }
     }
 
     @Override
-    public List<Booking> getAllBookingsByOwnerId(long ownerId, BookingState state) {
+    public List<Booking> getAllByOwnerId(long ownerId, BookingState state, Long from, Long size) {
+        if (from == 0 && size == 0) throw new BookingBadRequestException(ownerId);
+        if (from < 0 && size < 0) throw new BookingBadRequestException(ownerId);
         if (state.equals(BookingState.UNSUPPORTED_STATUS)) throw new BookingUnknownStateException(state.name());
         userRepository.findById(ownerId).orElseThrow(()
                 -> new UserNotFoundException(ownerId));
         LocalDateTime now = LocalDateTime.now();
+        List<Booking> bookingList;
         switch (state) {
             case ALL:
-                return bookingRepository.findAllByItemOwnerOrderByStartDesc(ownerId);
+                bookingList = bookingRepository.findAllByItemOwnerOrderByStartDesc(ownerId);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case WAITING:
-                return bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.WAITING);
+                bookingList = bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.WAITING);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case REJECTED:
-                return bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.REJECTED);
+                bookingList = bookingRepository.findAllByItemOwnerAndStatusOrderByStartAsc(ownerId, BookingState.REJECTED);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case FUTURE:
-                return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(ownerId, now);
+                bookingList = bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(ownerId, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case CURRENT:
-                return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartAsc(ownerId, now, now);
+                bookingList = bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartAsc(ownerId, now, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             case PAST:
-                return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(ownerId, now);
+                bookingList = bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(ownerId, now);
+                return bookingList.subList(Math.toIntExact(from), (int) (from + size > bookingList.size() ? bookingList.size() : from + size));
             default:
                 throw new BookingNotFoundException(state);
         }
