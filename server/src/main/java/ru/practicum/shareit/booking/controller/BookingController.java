@@ -49,7 +49,4 @@ public class BookingController {
                                          @RequestParam(value = "size", defaultValue = "10") Long size) {
         return bookingService.getAllByOwnerId(ownerId, state, from, size);
     }
-
-
-
 }
