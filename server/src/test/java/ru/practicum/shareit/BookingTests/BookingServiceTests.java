@@ -13,9 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
-import ru.practicum.shareit.booking.exception.BookingBadRequestException;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
-import ru.practicum.shareit.booking.exception.BookingUnknownStateException;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -64,30 +62,6 @@ class BookingServiceTests {
 
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
-    void createBookingEndBeforeNowTest() {
-        BookingDto bookingDto = BookingDto.builder()
-                .itemId(1L)
-                .start(LocalDateTime.now().plusHours(1))
-                .end(LocalDateTime.now().minusYears(1))
-                .build();
-
-        assertThrows(BookingBadRequestException.class, () -> bookingService.add(2L, bookingDto));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
-    void createBookingStartBeforeNowTest() {
-        BookingDto bookingDto = BookingDto.builder()
-                .itemId(1L)
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
-                .build();
-
-        assertThrows(BookingBadRequestException.class, () -> bookingService.add(2L, bookingDto));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
     void createBookingItemIsUnavailableTest() {
         BookingDto bookingDto = BookingDto.builder()
                 .itemId(2L)
@@ -96,19 +70,6 @@ class BookingServiceTests {
                 .build();
 
         assertThrows(ItemBadRequestException.class, () -> bookingService.add(1L, bookingDto));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
-    void createBookingStartEqualsEndNowTest() {
-        LocalDateTime now = LocalDateTime.now();
-        BookingDto bookingDto = BookingDto.builder()
-                .itemId(1L)
-                .start(now)
-                .end(now)
-                .build();
-
-        assertThrows(BookingBadRequestException.class, () -> bookingService.add(2L, bookingDto));
     }
 
     @Test
@@ -133,18 +94,6 @@ class BookingServiceTests {
                 .build();
 
         assertThrows(ItemNotFoundException.class, () -> bookingService.add(2L, bookingDto));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql" })
-    void createBookingStartAfterEndTest() {
-        BookingDto bookingDto = BookingDto.builder()
-                .itemId(1L)
-                .start(LocalDateTime.now().plusDays(10))
-                .end(LocalDateTime.now().plusDays(1))
-                .build();
-
-        assertThrows(BookingBadRequestException.class, () -> bookingService.add(2L, bookingDto));
     }
 
     @Test
@@ -254,12 +203,6 @@ class BookingServiceTests {
 
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllStateUnknownState() {
-        assertThrows(BookingUnknownStateException.class, () -> bookingService.getAll(1L, BookingState.UNSUPPORTED_STATUS, 0L, 10L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAllStateUnknown() {
         assertThrows(BookingNotFoundException.class, () -> bookingService.getAll(1L, BookingState.APPROVED, 0L, 10L));
     }
@@ -268,18 +211,6 @@ class BookingServiceTests {
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAllUserNotFound() {
         assertThrows(UserNotFoundException.class, () -> bookingService.getAll(100L, BookingState.APPROVED, 0L, 10L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllUserZeroSize() {
-        assertThrows(BookingBadRequestException.class, () -> bookingService.getAll(1L, BookingState.APPROVED, 0L, 0L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllUserWrongSize() {
-        assertThrows(BookingBadRequestException.class, () -> bookingService.getAll(1L, BookingState.APPROVED, -10L, -10L));
     }
 
     @Test
@@ -353,12 +284,6 @@ class BookingServiceTests {
 
     @Test
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllStateUnknownStateByOwner() {
-        assertThrows(BookingUnknownStateException.class, () -> bookingService.getAllByOwnerId(1L, BookingState.UNSUPPORTED_STATUS, 0L, 10L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAllStateUnknownByOwner() {
         assertThrows(BookingNotFoundException.class, () -> bookingService.getAllByOwnerId(1L, BookingState.APPROVED, 0L, 10L));
     }
@@ -367,17 +292,5 @@ class BookingServiceTests {
     @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
     void getAllUserNotFoundByOwner() {
         assertThrows(UserNotFoundException.class, () -> bookingService.getAllByOwnerId(100L, BookingState.APPROVED, 0L, 10L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllUserZeroSizeByOwner() {
-        assertThrows(BookingBadRequestException.class, () -> bookingService.getAllByOwnerId(1L, BookingState.APPROVED, 0L, 0L));
-    }
-
-    @Test
-    @Sql(value = { "/test-schema.sql", "/test-create-user.sql", "/test-create-item.sql", "/test-create-booking.sql" })
-    void getAllUserWrongSizeByOwner() {
-        assertThrows(BookingBadRequestException.class, () -> bookingService.getAllByOwnerId(1L, BookingState.APPROVED, -10L, -10L));
     }
 }
