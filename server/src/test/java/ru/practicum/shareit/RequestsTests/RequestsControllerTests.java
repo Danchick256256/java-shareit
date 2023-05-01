@@ -82,7 +82,7 @@ class RequestsControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(requestService).getAllRequests(userId, 1L, 10l);
+        verify(requestService).getAllRequests(userId, 1L, 10L);
     }
 
     @SneakyThrows
