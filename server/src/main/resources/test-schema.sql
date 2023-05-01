@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS USERS ();
-create table if not exists REQUESTS ();
-create table if not exists BOOKINGS ();
-create table if not exists ITEMS ();
-create table if not exists COMMENTS ();
+CREATE TABLE IF NOT EXISTS USERS (id BIGINT);
+create table if not exists REQUESTS (id BIGINT);
+create table if not exists BOOKINGS (id BIGINT);
+create table if not exists ITEMS (id BIGINT);
+create table if not exists COMMENTS (id BIGINT);
 DROP TABLE USERS, REQUESTS, BOOKINGS, ITEMS, COMMENTS CASCADE;
 
 CREATE TABLE IF NOT EXISTS USERS (
