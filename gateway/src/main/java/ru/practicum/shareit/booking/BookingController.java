@@ -24,8 +24,8 @@ public class BookingController {
     public ResponseEntity<Object> createBooking(@RequestHeader(Constants.userHeader) int ownerId,
                                                 @Valid @RequestBody BookingDto bookingDto) {
         log.info("create.booking.request");
-        if (bookingDto.getEnd().isBefore(LocalDateTime.now()))
-            throw new BookingBadRequestException("end is before now" + bookingDto.getItemId());
+        /*if (bookingDto.getEnd().isBefore(LocalDateTime.now()))
+            throw new BookingBadRequestException("end is before now" + bookingDto.getItemId());*/
         if (bookingDto.getStart().isBefore(LocalDateTime.now()))
             throw new BookingBadRequestException("start is before now" + bookingDto.getItemId());
         if (bookingDto.getStart().equals(bookingDto.getEnd()))
