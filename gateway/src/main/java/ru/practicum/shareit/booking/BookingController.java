@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.constants.Constants;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(path = "/bookings")
