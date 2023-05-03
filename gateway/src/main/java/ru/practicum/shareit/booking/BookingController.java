@@ -21,11 +21,8 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestHeader(Constants.userHeader) int ownerId,
-                                                @Valid @RequestBody BookingDto bookingDto) {
-        if (bookingDto.getStart().equals(bookingDto.getEnd()))
-            throw new BookingBadRequestException("end equals start" + bookingDto.getItemId());
-        if (bookingDto.getStart().isAfter(bookingDto.getEnd()))
-            throw new BookingBadRequestException("start is after end" + bookingDto.getItemId());
+                                                @RequestBody @Valid BookingDto bookingDto) {
+        log.info("create.booking.request");
         //return new ResponseEntity<>("end: " + bookingDto.getEnd() + " start: " + bookingDto.getStart() + " now: " + LocalDateTime.now(), HttpStatus.OK);
         return bookingClient.addBooking(ownerId, bookingDto);
     }
