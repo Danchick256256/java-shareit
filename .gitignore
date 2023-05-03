@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/**/target/
 
 ### STS ###
 .apt_generated
@@ -14,14 +15,14 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-/db/
-db/
 .idea
 *.iws
 *.iml
 *.ipr
 
 ### NetBeans ###
+/db/
+db/
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -33,4 +34,3 @@ build/
 
 ### VS Code ###
 .vscode/
-htmlReport
