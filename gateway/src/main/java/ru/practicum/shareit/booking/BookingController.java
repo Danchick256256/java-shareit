@@ -12,7 +12,6 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.constants.Constants;
 
 import javax.validation.Valid;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @RestController
@@ -25,21 +24,12 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestHeader(Constants.userHeader) int ownerId,
                                                 @Valid @RequestBody BookingDto bookingDto) {
-        Duration duration = Duration.between(LocalDateTime.now(), bookingDto.getStart());
-        long diffInSeconds = Math.abs(duration.getSeconds());
-        log.info("Разница во времени start: " + diffInSeconds);
-
-        duration = Duration.between(LocalDateTime.now(), bookingDto.getEnd());
-        diffInSeconds = Math.abs(duration.getSeconds());
-        log.info("Разница во времени end: " + diffInSeconds);
-        log.info("create.booking.request");
-
         if (bookingDto.getStart().equals(bookingDto.getEnd()))
             throw new BookingBadRequestException("end equals start" + bookingDto.getItemId());
         if (bookingDto.getStart().isAfter(bookingDto.getEnd()))
             throw new BookingBadRequestException("start is after end" + bookingDto.getItemId());
-        return new ResponseEntity<>("end: " + bookingDto.getEnd() + " start: " + bookingDto.getStart() + " now: " + LocalDateTime.now(), HttpStatus.OK);
-        //return bookingClient.addBooking(ownerId, bookingDto);
+        //return new ResponseEntity<>("end: " + bookingDto.getEnd() + " start: " + bookingDto.getStart() + " now: " + LocalDateTime.now(), HttpStatus.OK);
+        return bookingClient.addBooking(ownerId, bookingDto);
     }
 
     @GetMapping
